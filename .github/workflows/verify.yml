@@ -32,28 +32,26 @@ jobs:
         with:
           chrome-version: stable
 
+      - name: Install Xvfb (virtual display)
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
       - name: Build with Maven
         run: mvn -B clean package
 
-      - name: Run Selenium job
-        env:
-          HEADLESS: "true"
-        run: java -jar target/email-verifier.jar
+      # HEADLESS is intentionally NOT set, so Chrome runs in normal mode.
+      # xvfb-run gives Chrome a fake display to render into.
+      - name: Run Selenium job under Xvfb (non-headless)
+        run: xvfb-run --server-args="-screen 0 1920x1080x24" java -jar target/email-verifier.jar
 
-      # Always run this step, even if the Selenium job failed,
-      # so we still commit the debug screenshots
       - name: Commit results and debug captures
         if: always()
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Force-add debug folder even if .gitignore excludes it
           git add -f Domain.xlsx debug/ 2>/dev/null || true
-
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
-            git commit -m "chore: update results + debug captures [skip ci]"
+            git commit -m "chore: update results + debug captures (non-headless test) [skip ci]"
             git push
           fi
