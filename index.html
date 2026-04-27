@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Email Verification Results</title>
+  <title>Email Verification</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     * { box-sizing: border-box; }
@@ -16,6 +16,45 @@
     }
     h1 { margin: 0 0 0.25rem 0; }
     .subtitle { color: #6b7280; margin-bottom: 1.5rem; }
+
+    .panel {
+      background: #fff;
+      padding: 1.25rem;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      margin-bottom: 1.5rem;
+    }
+    .panel h2 { margin: 0 0 0.75rem 0; font-size: 1.05rem; }
+
+    .row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    input[type="text"], input[type="password"], input[type="file"] {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    input[type="text"], input[type="password"] { flex: 1; min-width: 220px; }
+
+    button, a.btn {
+      padding: 0.5rem 1rem;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    button:hover, a.btn:hover { background: #1d4ed8; }
+    button.secondary { background: #6b7280; }
+    button.secondary:hover { background: #4b5563; }
+    button:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    .msg { margin-top: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.9rem; }
+    .msg.ok    { background: #dcfce7; color: #166534; }
+    .msg.err   { background: #fee2e2; color: #991b1b; }
+    .msg.info  { background: #dbeafe; color: #1e40af; }
 
     .summary {
       display: grid;
@@ -36,31 +75,6 @@
     .yellow .value { color: #ca8a04; }
     .total  .value { color: #1f2937; }
 
-    .controls {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    input[type="text"] {
-      padding: 0.5rem 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      flex: 1;
-      min-width: 200px;
-      font-size: 0.95rem;
-    }
-    a.download {
-      padding: 0.5rem 1rem;
-      background: #2563eb;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-    a.download:hover { background: #1d4ed8; }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -69,11 +83,7 @@
       overflow: hidden;
       box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    th, td {
-      padding: 0.75rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid #f3f4f6;
-    }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #f3f4f6; }
     th {
       background: #f9fafb;
       font-size: 0.85rem;
@@ -93,30 +103,184 @@
     .badge.yellow { background: #fef9c3; color: #854d0e; }
 
     .status { padding: 1rem; color: #6b7280; }
+    details { margin-top: 0.5rem; font-size: 0.85rem; color: #6b7280; }
+    code { background: #f3f4f6; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.85em; }
   </style>
 </head>
 <body>
 
-  <h1>Email Verification Results</h1>
-  <p class="subtitle">Auto-updated by GitHub Actions from <code>Domain.xlsx</code></p>
+  <h1>Email Verification</h1>
+  <p class="subtitle">Upload a list, the workflow runs, and the results appear below.</p>
 
+  <!-- ============ CONFIG ============ -->
+  <div class="panel">
+    <h2>Repo settings</h2>
+    <div class="row">
+      <input type="text" id="repoOwner" placeholder="GitHub username (e.g. pavan)" />
+      <input type="text" id="repoName"  placeholder="Repo name (e.g. email-verifier)" />
+      <input type="text" id="repoBranch" placeholder="Branch (default: main)" value="main" />
+    </div>
+    <div class="row" style="margin-top: 0.75rem;">
+      <input type="password" id="ghToken" placeholder="GitHub Personal Access Token (kept in this browser only)" />
+      <button onclick="saveConfig()">Save</button>
+      <button class="secondary" onclick="clearConfig()">Clear</button>
+    </div>
+    <details>
+      <summary>How to get a token</summary>
+      <p>Go to <strong>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens &rarr; Generate new token</strong>. Give it access to <em>only this repo</em>, with <strong>Repository permissions &rarr; Contents: Read and write</strong>. Paste it above. It's stored in your browser's localStorage and never leaves this page except to call api.github.com.</p>
+    </details>
+    <div id="configMsg"></div>
+  </div>
+
+  <!-- ============ UPLOAD ============ -->
+  <div class="panel">
+    <h2>Upload new Domain.xlsx</h2>
+    <div class="row">
+      <input type="file" id="fileInput" accept=".xlsx" />
+      <button id="uploadBtn" onclick="uploadFile()">Upload &amp; Trigger Workflow</button>
+    </div>
+    <div id="uploadMsg"></div>
+  </div>
+
+  <!-- ============ RESULTS ============ -->
   <div class="summary">
-    <div class="card green"><div class="label">Safe / Valid</div><div class="value" id="count-green">–</div></div>
-    <div class="card red"><div class="label">Invalid / Risky</div><div class="value" id="count-red">–</div></div>
-    <div class="card yellow"><div class="label">Unknown / Other</div><div class="value" id="count-yellow">–</div></div>
-    <div class="card total"><div class="label">Total</div><div class="value" id="count-total">–</div></div>
+    <div class="card green"><div class="label">Safe / Valid</div><div class="value" id="count-green">&ndash;</div></div>
+    <div class="card red"><div class="label">Invalid / Risky</div><div class="value" id="count-red">&ndash;</div></div>
+    <div class="card yellow"><div class="label">Unknown / Other</div><div class="value" id="count-yellow">&ndash;</div></div>
+    <div class="card total"><div class="label">Total</div><div class="value" id="count-total">&ndash;</div></div>
   </div>
 
-  <div class="controls">
-    <input type="text" id="search" placeholder="Filter by email or status..." />
-    <a class="download" href="Domain.xlsx" download>Download Excel</a>
-  </div>
-
-  <div id="table-wrapper">
-    <p class="status">Loading…</p>
+  <div class="panel">
+    <div class="row" style="margin-bottom: 0.75rem;">
+      <input type="text" id="search" placeholder="Filter by email or status..." />
+      <button class="secondary" onclick="loadResults()">Refresh</button>
+      <a class="btn" href="Domain.xlsx" download>Download Excel</a>
+    </div>
+    <div id="table-wrapper">
+      <p class="status">Loading&hellip;</p>
+    </div>
   </div>
 
 <script>
+  // ---------- config persistence ----------
+  function saveConfig() {
+    const cfg = {
+      owner:  document.getElementById("repoOwner").value.trim(),
+      name:   document.getElementById("repoName").value.trim(),
+      branch: document.getElementById("repoBranch").value.trim() || "main",
+      token:  document.getElementById("ghToken").value.trim()
+    };
+    localStorage.setItem("ev_cfg", JSON.stringify(cfg));
+    showMsg("configMsg", "Saved.", "ok");
+  }
+  function clearConfig() {
+    localStorage.removeItem("ev_cfg");
+    document.getElementById("repoOwner").value = "";
+    document.getElementById("repoName").value = "";
+    document.getElementById("repoBranch").value = "main";
+    document.getElementById("ghToken").value = "";
+    showMsg("configMsg", "Cleared.", "info");
+  }
+  function loadConfig() {
+    try {
+      const cfg = JSON.parse(localStorage.getItem("ev_cfg") || "{}");
+      if (cfg.owner)  document.getElementById("repoOwner").value = cfg.owner;
+      if (cfg.name)   document.getElementById("repoName").value  = cfg.name;
+      if (cfg.branch) document.getElementById("repoBranch").value = cfg.branch;
+      if (cfg.token)  document.getElementById("ghToken").value   = cfg.token;
+      return cfg;
+    } catch { return {}; }
+  }
+  function getConfig() {
+    return {
+      owner:  document.getElementById("repoOwner").value.trim(),
+      name:   document.getElementById("repoName").value.trim(),
+      branch: document.getElementById("repoBranch").value.trim() || "main",
+      token:  document.getElementById("ghToken").value.trim()
+    };
+  }
+  function showMsg(id, text, kind) {
+    const el = document.getElementById(id);
+    el.innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
+  }
+
+  // ---------- upload via GitHub API ----------
+  async function uploadFile() {
+    const cfg = getConfig();
+    if (!cfg.owner || !cfg.name || !cfg.token) {
+      showMsg("uploadMsg", "Fill in repo owner, name, and token first.", "err");
+      return;
+    }
+    const fileEl = document.getElementById("fileInput");
+    if (!fileEl.files.length) {
+      showMsg("uploadMsg", "Pick an .xlsx file first.", "err");
+      return;
+    }
+    const file = fileEl.files[0];
+    const btn = document.getElementById("uploadBtn");
+    btn.disabled = true;
+    showMsg("uploadMsg", "Reading file...", "info");
+
+    try {
+      // Convert file to base64 (GitHub Contents API requires base64)
+      const buf = await file.arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      let binary = "";
+      const CHUNK = 0x8000;
+      for (let i = 0; i < bytes.length; i += CHUNK) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+      }
+      const b64 = btoa(binary);
+
+      const apiBase = "https://api.github.com/repos/" + cfg.owner + "/" + cfg.name + "/contents/Domain.xlsx";
+      const headers = {
+        "Authorization": "Bearer " + cfg.token,
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28"
+      };
+
+      // Need the current file's SHA to overwrite. If file doesn't exist yet, sha = undefined.
+      showMsg("uploadMsg", "Checking existing file...", "info");
+      let sha;
+      const getRes = await fetch(apiBase + "?ref=" + encodeURIComponent(cfg.branch), { headers });
+      if (getRes.ok) {
+        const meta = await getRes.json();
+        sha = meta.sha;
+      } else if (getRes.status !== 404) {
+        const err = await getRes.json().catch(() => ({}));
+        throw new Error("GET failed: " + getRes.status + " " + (err.message || ""));
+      }
+
+      showMsg("uploadMsg", "Uploading to repo...", "info");
+      const body = {
+        message: "chore: upload new Domain.xlsx via web UI",
+        content: b64,
+        branch: cfg.branch
+      };
+      if (sha) body.sha = sha;
+
+      const putRes = await fetch(apiBase, {
+        method: "PUT",
+        headers: Object.assign({}, headers, { "Content-Type": "application/json" }),
+        body: JSON.stringify(body)
+      });
+      if (!putRes.ok) {
+        const err = await putRes.json().catch(() => ({}));
+        throw new Error("PUT failed: " + putRes.status + " " + (err.message || ""));
+      }
+
+      const actionsUrl = "https://github.com/" + cfg.owner + "/" + cfg.name + "/actions";
+      showMsg("uploadMsg",
+        'Uploaded. The workflow should start automatically &mdash; <a href="' + actionsUrl + '" target="_blank">watch progress here</a>. Refresh this page in a couple of minutes to see the results.',
+        "ok");
+    } catch (err) {
+      showMsg("uploadMsg", "Failed: " + err.message, "err");
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // ---------- results loader ----------
   function classify(status) {
     const s = (status || "").toLowerCase();
     if (s.includes("safe") || s.includes("valid") || s.includes("deliverable") || s.includes("good")) return "green";
@@ -124,22 +288,21 @@
     return "yellow";
   }
 
-  async function load() {
+  async function loadResults() {
     const wrapper = document.getElementById("table-wrapper");
+    wrapper.innerHTML = '<p class="status">Loading...</p>';
     try {
-      // Cache-bust so the page always shows the latest committed file
       const res = await fetch("Domain.xlsx?t=" + Date.now());
       if (!res.ok) throw new Error("HTTP " + res.status);
       const buf = await res.arrayBuffer();
       const wb = XLSX.read(buf, { type: "array" });
 
-      // Prefer the "Results" sheet written by the Java code
       const sheetName = wb.SheetNames.includes("Results") ? "Results" : wb.SheetNames[0];
       const sheet = wb.Sheets[sheetName];
       const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
 
       if (rows.length < 2) {
-        wrapper.innerHTML = '<p class="status">No results yet. Run the workflow first.</p>';
+        wrapper.innerHTML = '<p class="status">No results yet. Upload a file and wait for the workflow to finish.</p>';
         return;
       }
 
@@ -150,7 +313,7 @@
         if (cls === "green") g++;
         else if (cls === "red") r++;
         else y++;
-        return { email: row[0], status: row[1] || "—", cls };
+        return { email: row[0], status: row[1] || "-", cls };
       });
 
       document.getElementById("count-green").textContent = g;
@@ -159,38 +322,30 @@
       document.getElementById("count-total").textContent = enriched.length;
 
       function render(list) {
-        if (!list.length) {
-          wrapper.innerHTML = '<p class="status">No matches.</p>';
-          return;
-        }
+        if (!list.length) { wrapper.innerHTML = '<p class="status">No matches.</p>'; return; }
         let html = '<table><thead><tr><th>#</th><th>Email</th><th>Status</th></tr></thead><tbody>';
         list.forEach((row, i) => {
-          html += `<tr>
-            <td>${i + 1}</td>
-            <td>${row.email}</td>
-            <td><span class="badge ${row.cls}">${row.status}</span></td>
-          </tr>`;
+          html += '<tr><td>' + (i + 1) + '</td><td>' + row.email + '</td><td><span class="badge ' + row.cls + '">' + row.status + '</span></td></tr>';
         });
         html += "</tbody></table>";
         wrapper.innerHTML = html;
       }
-
       render(enriched);
 
-      document.getElementById("search").addEventListener("input", e => {
+      document.getElementById("search").oninput = e => {
         const q = e.target.value.toLowerCase();
         render(enriched.filter(x =>
           String(x.email).toLowerCase().includes(q) ||
           String(x.status).toLowerCase().includes(q)
         ));
-      });
-
+      };
     } catch (err) {
       wrapper.innerHTML = '<p class="status">Could not load Domain.xlsx: ' + err.message + '</p>';
     }
   }
 
-  load();
+  loadConfig();
+  loadResults();
 </script>
 </body>
 </html>
