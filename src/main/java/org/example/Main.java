@@ -27,15 +27,21 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         String filePath = "Domain.xlsx";
 
-        // Make a fresh debug folder for this run
         Path debugDir = Paths.get("debug");
         Files.createDirectories(debugDir);
 
         boolean headless = "true".equalsIgnoreCase(System.getenv("HEADLESS"));
+        System.out.println(">>> Mode: " + (headless ? "HEADLESS" : "NON-HEADLESS (visible window)"));
+        System.out.println(">>> DISPLAY env: " + System.getenv("DISPLAY"));
 
         ChromeOptions options = new ChromeOptions();
         if (headless) {
             options.addArguments("--headless=new");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--window-size=1920,1080");
+        } else {
+            // Even non-headless on Linux benefits from these flags
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
             options.addArguments("--window-size=1920,1080");
@@ -79,7 +85,7 @@ public class Main {
         int outputRowIndex = 1;
         int safe = 0, temporary = 0, unknown = 0;
         int failureCount = 0;
-        final int MAX_DEBUG_CAPTURES = 30; // safety cap so debug/ doesn't explode
+        final int MAX_DEBUG_CAPTURES = 30;
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
@@ -109,10 +115,8 @@ public class Main {
                 status = "FAILED TO LOAD";
                 System.out.println("Could not fetch status for: " + email);
 
-                // Capture EVERY failure (up to MAX_DEBUG_CAPTURES)
                 if (failureCount < MAX_DEBUG_CAPTURES) {
                     try {
-                        // Filename-safe version of the email
                         String safeName = email.replaceAll("[^a-zA-Z0-9._-]", "_");
                         String prefix = String.format("fail_%03d_%s", failureCount + 1, safeName);
 
@@ -157,11 +161,11 @@ public class Main {
         System.out.println("=============================================================");
         System.out.println("SUMMARY");
         System.out.println("=============================================================");
-        System.out.printf("  GREEN  (Safe/Valid)       : %d%n", safe);
-        System.out.printf("  RED    (Temporary/Invalid): %d%n", temporary);
-        System.out.printf("  YELLOW (Unknown/Other)    : %d%n", unknown);
-        System.out.printf("  Total  Processed          : %d%n", (safe + temporary + unknown));
-        System.out.printf("  Debug captures saved      : %d (in debug/ folder)%n", failureCount);
+        System.out.printf("  GREEN  : %d%n", safe);
+        System.out.printf("  RED    : %d%n", temporary);
+        System.out.printf("  YELLOW : %d%n", unknown);
+        System.out.printf("  Total  : %d%n", (safe + temporary + unknown));
+        System.out.printf("  Debug  : %d captures saved%n", failureCount);
         System.out.println("=============================================================");
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
