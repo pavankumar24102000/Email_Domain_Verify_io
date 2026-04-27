@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 
 public class Main {
@@ -26,16 +27,19 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         String filePath = "Domain.xlsx";
 
+        // Make a fresh debug folder for this run
         Path debugDir = Paths.get("debug");
         Files.createDirectories(debugDir);
 
+        boolean headless = "true".equalsIgnoreCase(System.getenv("HEADLESS"));
+
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--window-size=1920,1080");
-        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36");
+        if (headless) {
+            options.addArguments("--headless=new");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--window-size=1920,1080");
+        }
 
         WebDriver driver = new ChromeDriver(options);
 
@@ -55,9 +59,11 @@ public class Main {
         CellStyle greenStyle = workbook.createCellStyle();
         greenStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         greenStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
         CellStyle redStyle = workbook.createCellStyle();
         redStyle.setFillForegroundColor(IndexedColors.ROSE.getIndex());
         redStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
         CellStyle yellowStyle = workbook.createCellStyle();
         yellowStyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
         yellowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -72,7 +78,8 @@ public class Main {
 
         int outputRowIndex = 1;
         int safe = 0, temporary = 0, unknown = 0;
-        boolean savedDebug = false;
+        int failureCount = 0;
+        final int MAX_DEBUG_CAPTURES = 30; // safety cap so debug/ doesn't explode
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
@@ -102,15 +109,27 @@ public class Main {
                 status = "FAILED TO LOAD";
                 System.out.println("Could not fetch status for: " + email);
 
-                if (!savedDebug) {
+                // Capture EVERY failure (up to MAX_DEBUG_CAPTURES)
+                if (failureCount < MAX_DEBUG_CAPTURES) {
                     try {
+                        // Filename-safe version of the email
+                        String safeName = email.replaceAll("[^a-zA-Z0-9._-]", "_");
+                        String prefix = String.format("fail_%03d_%s", failureCount + 1, safeName);
+
                         File png = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-                        Files.copy(png.toPath(), debugDir.resolve("first_failure.png"));
-                        Files.writeString(debugDir.resolve("first_failure.html"), driver.getPageSource());
-                        Files.writeString(debugDir.resolve("first_failure_url.txt"), driver.getCurrentUrl());
-                        savedDebug = true;
-                        System.out.println(">> Saved debug artifacts to debug/ folder");
+                        Files.copy(png.toPath(),
+                                debugDir.resolve(prefix + ".png"),
+                                StandardCopyOption.REPLACE_EXISTING);
+
+                        Files.writeString(debugDir.resolve(prefix + ".html"),
+                                driver.getPageSource());
+
+                        Files.writeString(debugDir.resolve(prefix + "_url.txt"),
+                                driver.getCurrentUrl());
+
+                        System.out.println("   >> saved debug/" + prefix + ".png");
                     } catch (Exception ignore) {}
+                    failureCount++;
                 }
             }
 
@@ -138,10 +157,11 @@ public class Main {
         System.out.println("=============================================================");
         System.out.println("SUMMARY");
         System.out.println("=============================================================");
-        System.out.printf("  GREEN  : %d%n", safe);
-        System.out.printf("  RED    : %d%n", temporary);
-        System.out.printf("  YELLOW : %d%n", unknown);
-        System.out.printf("  Total  : %d%n", (safe + temporary + unknown));
+        System.out.printf("  GREEN  (Safe/Valid)       : %d%n", safe);
+        System.out.printf("  RED    (Temporary/Invalid): %d%n", temporary);
+        System.out.printf("  YELLOW (Unknown/Other)    : %d%n", unknown);
+        System.out.printf("  Total  Processed          : %d%n", (safe + temporary + unknown));
+        System.out.printf("  Debug captures saved      : %d (in debug/ folder)%n", failureCount);
         System.out.println("=============================================================");
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
