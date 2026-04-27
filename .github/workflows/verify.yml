@@ -1,4 +1,4 @@
-name: Run Email Verifier
+name: verify emails
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
       - 'Domain.xlsx'
       - 'src/**'
       - 'pom.xml'
+      - '.github/workflows/**'
 
 permissions:
   contents: write
@@ -35,16 +36,24 @@ jobs:
         run: mvn -B clean package
 
       - name: Run Selenium job
+        env:
+          HEADLESS: "true"
         run: java -jar target/email-verifier.jar
 
-      - name: Commit updated files
+      # Always run this step, even if the Selenium job failed,
+      # so we still commit the debug screenshots
+      - name: Commit results and debug captures
+        if: always()
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Domain.xlsx debug/ 2>/dev/null || true
+
+          # Force-add debug folder even if .gitignore excludes it
+          git add -f Domain.xlsx debug/ 2>/dev/null || true
+
           if git diff --staged --quiet; then
-            echo "No changes to commit."
+            echo "Nothing to commit."
           else
-            git commit -m "chore: update results [skip ci]"
+            git commit -m "chore: update results + debug captures [skip ci]"
             git push
           fi
