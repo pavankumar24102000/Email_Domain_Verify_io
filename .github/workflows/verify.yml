@@ -1,17 +1,15 @@
 name: Run Email Verifier
 
 on:
-  workflow_dispatch:        # allows manual trigger from the Actions tab
+  workflow_dispatch:
   push:
     paths:
-      - 'Domain.xlsx'       # re-run whenever the input file changes
+      - 'Domain.xlsx'
       - 'src/**'
       - 'pom.xml'
-  schedule:
-    - cron: '0 6 * * *'     # optional: daily at 06:00 UTC. Delete this block if not needed.
 
 permissions:
-  contents: write           # needed so the workflow can commit the updated xlsx back
+  contents: write
 
 jobs:
   verify:
@@ -28,9 +26,6 @@ jobs:
           java-version: '17'
           cache: maven
 
-      # Chrome is pre-installed on ubuntu-latest runners, but we install it
-      # explicitly to guarantee a known-good version + matching chromedriver
-      # is on PATH (Selenium Manager will resolve the driver automatically).
       - name: Install Chrome
         uses: browser-actions/setup-chrome@v1
         with:
@@ -42,14 +37,14 @@ jobs:
       - name: Run Selenium job
         run: java -jar target/email-verifier.jar
 
-      - name: Commit updated Domain.xlsx
+      - name: Commit updated files
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Domain.xlsx
+          git add Domain.xlsx debug/ 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "chore: update Domain.xlsx with verification results [skip ci]"
+            git commit -m "chore: update results [skip ci]"
             git push
           fi
