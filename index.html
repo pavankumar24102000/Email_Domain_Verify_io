@@ -137,12 +137,11 @@
     }
     .stat-label { font-size: 0.78rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
     .stat-value {
-      font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em;
-      margin: 0.3rem 0 0.15rem;
+      font-size: 2.6rem; font-weight: 700; letter-spacing: -0.03em;
+      margin-top: 0.4rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
     }
-    .stat-sub { font-size: 0.82rem; color: var(--text-3); }
 
     .stat.safe    { --accent: var(--green);  --accent-bg: var(--green-bg); }
     .stat.valid   { --accent: var(--blue);   --accent-bg: var(--blue-bg); }
@@ -170,9 +169,12 @@
     .problem-domain { flex: 1; min-width: 0; }
     .problem-domain .name { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .problem-domain .reason { font-size: 0.75rem; color: var(--text-3); margin-top: 1px; }
-    .problem-count {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600; font-size: 0.95rem; color: var(--red);
+    .problem-status {
+      font-size: 0.7rem; font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: var(--red-bg); color: var(--red);
+      flex-shrink: 0;
     }
 
     .panel { padding: 1.4rem; margin-bottom: 1.25rem; }
@@ -200,7 +202,6 @@
     .msg.err   { background: var(--red-bg);    color: var(--red);    border-color: rgba(248, 113, 113, 0.25); }
     .msg.info  { background: var(--blue-bg);   color: var(--blue);   border-color: rgba(96, 165, 250, 0.25); }
 
-    /* Processing banner */
     .processing-banner {
       padding: 1.1rem 1.4rem;
       margin-bottom: 1.25rem;
@@ -226,13 +227,14 @@
       border-color: rgba(52, 211, 153, 0.25);
     }
     .processing-banner.complete .spinner { display: none; }
+    .processing-banner.complete .processing-text .title { color: var(--green); }
     .processing-banner.failed {
       background: linear-gradient(135deg, var(--red-bg), rgba(248, 113, 113, 0.04));
       border-color: rgba(248, 113, 113, 0.25);
     }
     .processing-banner.failed .spinner { display: none; }
+    .processing-banner.failed .processing-text .title { color: var(--red); }
 
-    /* Scrollable table */
     .table-scroll {
       max-height: 560px;
       overflow-y: auto;
@@ -258,7 +260,6 @@
     tbody tr { transition: background 0.1s ease; }
     tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
     tbody tr:last-child td { border-bottom: none; }
-    td.num { text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
     td.domain { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
     .reason { color: var(--text-2); font-size: 0.82rem; }
 
@@ -304,9 +305,7 @@
     details p { color: var(--text-3); font-size: 0.85rem; padding: 0.5rem 0; line-height: 1.6; }
     code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
 
-    .stale-overlay {
-      position: relative;
-    }
+    .stale-overlay { position: relative; }
     .stale-overlay::after {
       content: 'New file uploaded — old data hidden';
       position: absolute; inset: 0;
@@ -323,7 +322,6 @@
 <body>
 <div class="app">
 
-  <!-- ============ HEADER ============ -->
   <header>
     <div class="brand">
       <div class="logo">⊚</div>
@@ -338,10 +336,9 @@
     </div>
   </header>
 
-  <!-- ============ PROCESSING BANNER (shown when workflow is running) ============ -->
   <div id="processing-banner" style="display:none;"></div>
 
-  <!-- ============ UPLOAD (moved up - per request #3) ============ -->
+  <!-- UPLOAD (top of page per request) -->
   <div class="glass panel">
     <h2>Upload new Domain.xlsx</h2>
     <div class="row">
@@ -351,46 +348,40 @@
     <div id="uploadMsg"></div>
   </div>
 
-  <!-- ============ STAT CARDS ============ -->
-  <div class="grid grid-cards" id="cards-grid">
+  <!-- STAT CARDS (no records subtitle) -->
+  <div class="grid grid-cards">
     <div class="stat glass safe">
       <div class="stat-icon">✓</div>
       <div class="stat-label">Safe Providers</div>
       <div class="stat-value" id="count-safe">—</div>
-      <div class="stat-sub" id="rec-safe">&nbsp;</div>
     </div>
     <div class="stat glass valid">
       <div class="stat-icon">⊡</div>
       <div class="stat-label">Valid Domains</div>
       <div class="stat-value" id="count-valid">—</div>
-      <div class="stat-sub" id="rec-valid">&nbsp;</div>
     </div>
     <div class="stat glass bad">
       <div class="stat-icon">⚠</div>
       <div class="stat-label">Bad / Suspicious</div>
       <div class="stat-value" id="count-bad">—</div>
-      <div class="stat-sub" id="rec-bad">&nbsp;</div>
     </div>
     <div class="stat glass unknown">
       <div class="stat-icon">?</div>
       <div class="stat-label">Unknown</div>
       <div class="stat-value" id="count-unknown">—</div>
-      <div class="stat-sub" id="rec-unknown">&nbsp;</div>
     </div>
     <div class="stat glass total">
       <div class="stat-icon">∑</div>
-      <div class="stat-label">Total Records</div>
+      <div class="stat-label">Total Domains</div>
       <div class="stat-value" id="count-total">—</div>
-      <div class="stat-sub" id="rec-total">&nbsp;</div>
     </div>
   </div>
 
-  <!-- ============ CHART + TOP PROBLEMS ============ -->
   <div class="grid grid-main">
     <div class="glass chart-card" id="chart-section">
       <div class="section-title">
         <h2>Distribution by category</h2>
-        <span class="meta">Records weighted</span>
+        <span class="meta">Domains</span>
       </div>
       <div class="chart-wrap">
         <canvas id="distChart"></canvas>
@@ -398,8 +389,8 @@
     </div>
     <div class="glass top-problems" id="problems-section">
       <div class="section-title">
-        <h2>Top problem domains</h2>
-        <span class="meta">By records affected</span>
+        <h2>Problem domains</h2>
+        <span class="meta">Need review</span>
       </div>
       <div id="top-problems-list">
         <div class="empty">Loading…</div>
@@ -407,7 +398,6 @@
     </div>
   </div>
 
-  <!-- ============ DOWNLOADS ============ -->
   <div class="glass panel">
     <h2>Latest results</h2>
     <div class="dl-grid">
@@ -426,7 +416,6 @@
     </div>
   </div>
 
-  <!-- ============ TABLE WITH TABS + SCROLL ============ -->
   <div class="glass panel">
     <div class="section-title">
       <h2>Domain breakdown</h2>
@@ -452,7 +441,6 @@
     </div>
   </div>
 
-  <!-- ============ CONFIG ============ -->
   <div class="glass panel">
     <h2>Repository settings</h2>
     <div class="row">
@@ -467,12 +455,11 @@
     </div>
     <details style="margin-top: 0.85rem;">
       <summary>How to get a token</summary>
-      <p>GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens. Permissions: <code>Contents: Read and write</code> + <code>Actions: Read</code> (so the dashboard can check workflow status). Stored only in this browser.</p>
+      <p>GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens. Permissions: <code>Contents: Read and write</code> + <code>Actions: Read</code> (so the dashboard can check workflow status).</p>
     </details>
     <div id="configMsg"></div>
   </div>
 
-  <!-- ============ PDF EMBED ============ -->
   <div class="glass panel">
     <h2>PDF report preview</h2>
     <iframe class="pdf-frame" id="pdf-frame" src="Domain.pdf"></iframe>
@@ -481,7 +468,6 @@
 </div>
 
 <script>
-  // ===== helpers =====
   const fmt = n => Number(n || 0).toLocaleString();
   const STORAGE_KEY = "ev_state_v2";
 
@@ -509,19 +495,13 @@
     requestAnimationFrame(tick);
   }
 
-  // Persistent state across reloads
   function getState() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
     catch { return {}; }
   }
-  function setState(s) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-  }
-  function patchState(patch) {
-    setState({ ...getState(), ...patch });
-  }
+  function setState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+  function patchState(patch) { setState({ ...getState(), ...patch }); }
 
-  // ===== config persistence =====
   function saveConfig() {
     const cfg = {
       owner:  document.getElementById("repoOwner").value.trim(),
@@ -556,7 +536,6 @@
     };
   }
 
-  // ===== upload =====
   async function uploadFile() {
     const cfg = getConfig();
     if (!cfg.owner || !cfg.name || !cfg.token) {
@@ -607,10 +586,8 @@
       const respJson = await putRes.json();
       const newSha = respJson.commit ? respJson.commit.sha : null;
 
-      // PER REQUEST #1: clear old data immediately so nothing stale shows
       clearDashboard();
 
-      // Save processing state so reload still knows
       patchState({
         processing: true,
         uploadedAt: Date.now(),
@@ -622,8 +599,6 @@
       });
 
       showMsg("uploadMsg", "Uploaded. Workflow starting…", "ok");
-
-      // Begin polling for workflow completion
       startProcessingPoll();
 
     } catch (err) {
@@ -633,20 +608,14 @@
     }
   }
 
-  // ===== Clear dashboard for fresh upload =====
   function clearDashboard() {
     ["count-safe","count-valid","count-bad","count-unknown","count-total"].forEach(id => {
       document.getElementById(id).textContent = "—";
     });
-    ["rec-safe","rec-valid","rec-bad","rec-unknown","rec-total"].forEach(id => {
-      document.getElementById(id).textContent = "\u00A0";
-    });
-    document.getElementById("table-wrapper").innerHTML = '<div class="empty-stale">⏳ New file uploaded — waiting for workflow to finish processing.</div>';
+    document.getElementById("table-wrapper").innerHTML = '<div class="empty-stale">⏳ New file uploaded — waiting for workflow to finish.</div>';
     document.getElementById("top-problems-list").innerHTML = '<div class="empty-stale">Processing…</div>';
     document.getElementById("table-count").textContent = "—";
     if (chart) { chart.destroy(); chart = null; }
-
-    // Add stale overlay over chart + problems sections
     document.getElementById("chart-section").classList.add("stale-overlay");
     document.getElementById("problems-section").classList.add("stale-overlay");
   }
@@ -656,7 +625,6 @@
     document.getElementById("problems-section").classList.remove("stale-overlay");
   }
 
-  // ===== Processing banner + poll =====
   let pollTimer = null;
   let pollSeconds = 0;
 
@@ -690,7 +658,7 @@
     const cfg = getConfig();
     if (!cfg.owner || !cfg.name || !cfg.token) {
       showBanner("", "Workflow running",
-        "Cannot check status — configure your token below to enable live polling. The workflow is still running on GitHub.");
+        "Cannot check status — configure your token below to enable live polling.");
       return;
     }
 
@@ -710,7 +678,6 @@
       if (!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
 
-      // Find the run associated with our upload commit, or the most recent one after upload time
       let run = null;
       if (st.commitSha) {
         run = (data.workflow_runs || []).find(r => r.head_sha === st.commitSha);
@@ -729,16 +696,13 @@
         return;
       }
 
-      const status = run.status;       // queued | in_progress | completed
-      const conclusion = run.conclusion; // success | failure | cancelled (only when completed)
+      const status = run.status;
+      const conclusion = run.conclusion;
 
       if (status === "completed") {
         if (conclusion === "success") {
-          showBanner("complete", "✓ Processing complete",
-            "Loading fresh results…");
+          showBanner("complete", "✓ Processing complete", "Loading fresh results…");
           setLive("Live data");
-
-          // Wait a moment then load the actual results (the bot needs to commit results back)
           setTimeout(() => {
             patchState({ processing: false });
             stopProcessingPoll();
@@ -755,38 +719,33 @@
         }
       } else if (status === "in_progress") {
         const stepInfo = run.name ? "Running: " + run.name : "Workflow building…";
-        showBanner("", stepInfo,
-          "Elapsed: " + elapsedStr + " · Auto-refreshing every 5s");
+        showBanner("", stepInfo, "Elapsed: " + elapsedStr + " · Auto-refreshing every 5s");
         setLive("Processing…", "processing");
       } else {
-        // queued or waiting
-        showBanner("", "Workflow queued",
-          "GitHub is preparing a runner · " + elapsedStr + " elapsed");
+        showBanner("", "Workflow queued", "GitHub is preparing a runner · " + elapsedStr + " elapsed");
         setLive("Processing…", "processing");
       }
     } catch (err) {
       showBanner("", "Workflow running",
-        "Cannot check status (" + err.message + ") — workflow is still processing on GitHub. Elapsed: " + elapsedStr);
+        "Cannot check status (" + err.message + ") — workflow is still processing. Elapsed: " + elapsedStr);
     }
   }
 
   function startProcessingPoll() {
     stopProcessingPoll();
     pollSeconds = 0;
-    pollWorkflow(); // immediate
+    pollWorkflow();
     pollTimer = setInterval(pollWorkflow, 5000);
   }
   function stopProcessingPoll() {
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
   }
 
-  // ===== render data =====
   let allRows = [];
   let chart = null;
   let activeStatus = "";
 
   async function loadResults(manual) {
-    // If a new file is being processed, don't overwrite the "processing" UI with old data
     const st = getState();
     if (st.processing && !manual) return;
 
@@ -805,36 +764,24 @@
         return;
       }
 
-      const headerRow = rows[0].map(h => String(h).toLowerCase());
-      const has4Col = headerRow.length >= 4 && headerRow[1].includes("record");
+      // Schema: [Domain, Status, Reason] — 3 columns only
+      allRows = rows.slice(1).filter(r => r[0]).map(r => ({
+        domain: r[0],
+        status: String(r[1] || "—").toUpperCase(),
+        reason: r[2] || ""
+      }));
 
-      allRows = rows.slice(1).filter(r => r[0]).map(r => has4Col
-        ? { domain: r[0], records: Number(r[1]) || 0, status: String(r[2] || "—").toUpperCase(), reason: r[3] || "" }
-        : { domain: r[0], records: 1,                   status: String(r[1] || "—").toUpperCase(), reason: r[2] || "" }
-      );
-
+      // Tally by domain count only
       const tD = {green:0, blue:0, red:0, yellow:0};
-      const tR = {green:0, blue:0, red:0, yellow:0};
-      allRows.forEach(r => {
-        const k = classify(r.status);
-        tD[k]++;
-        tR[k] += r.records;
-      });
-      const totalR = tR.green + tR.blue + tR.red + tR.yellow;
+      allRows.forEach(r => { tD[classify(r.status)]++; });
 
       animateNumber(document.getElementById("count-safe"),    0, tD.green);
       animateNumber(document.getElementById("count-valid"),   0, tD.blue);
       animateNumber(document.getElementById("count-bad"),     0, tD.red);
       animateNumber(document.getElementById("count-unknown"), 0, tD.yellow);
-      animateNumber(document.getElementById("count-total"),   0, totalR);
+      animateNumber(document.getElementById("count-total"),   0, allRows.length);
 
-      document.getElementById("rec-safe").textContent    = fmt(tR.green) + " records";
-      document.getElementById("rec-valid").textContent   = fmt(tR.blue) + " records";
-      document.getElementById("rec-bad").textContent     = fmt(tR.red) + " records";
-      document.getElementById("rec-unknown").textContent = fmt(tR.yellow) + " records";
-      document.getElementById("rec-total").textContent   = allRows.length + " unique domains";
-
-      renderChart(tR);
+      renderChart(tD);
       renderTopProblems();
       renderTable();
 
@@ -846,7 +793,7 @@
     }
   }
 
-  function renderChart(tR) {
+  function renderChart(tD) {
     const ctx = document.getElementById("distChart");
     if (chart) chart.destroy();
 
@@ -856,7 +803,7 @@
       data: {
         labels: ["Safe", "Valid", "Bad", "Unknown"],
         datasets: [{
-          data: [tR.green, tR.blue, tR.red, tR.yellow],
+          data: [tD.green, tD.blue, tD.red, tD.yellow],
           backgroundColor: [
             styles.getPropertyValue('--green').trim(),
             styles.getPropertyValue('--blue').trim(),
@@ -896,7 +843,6 @@
     const list = document.getElementById("top-problems-list");
     const bad = allRows
       .filter(r => classify(r.status) === "red")
-      .sort((a, b) => b.records - a.records)
       .slice(0, 8);
     if (!bad.length) {
       list.innerHTML = '<div class="empty">No problem domains 🎉</div>';
@@ -906,9 +852,9 @@
       <div class="problem-row">
         <div class="problem-domain">
           <div class="name">${r.domain}</div>
-          <div class="reason">${r.status} · ${r.reason}</div>
+          <div class="reason">${r.reason}</div>
         </div>
-        <div class="problem-count">${fmt(r.records)}</div>
+        <div class="problem-status">${r.status}</div>
       </div>
     `).join('');
   }
@@ -923,7 +869,7 @@
       return String(r.domain).toLowerCase().includes(q)
           || String(r.status).toLowerCase().includes(q)
           || String(r.reason).toLowerCase().includes(q);
-    }).sort((a, b) => b.records - a.records);
+    });
 
     document.getElementById("table-count").textContent =
       filtered.length === allRows.length
@@ -935,12 +881,11 @@
       return;
     }
 
-    let html = '<table><thead><tr><th>Domain</th><th style="text-align:right;">Records</th><th>Status</th><th>Reason</th></tr></thead><tbody>';
+    let html = '<table><thead><tr><th>Domain</th><th>Status</th><th>Reason</th></tr></thead><tbody>';
     filtered.forEach(r => {
       const cls = classify(r.status);
       html += `<tr>
         <td class="domain">${r.domain}</td>
-        <td class="num">${fmt(r.records)}</td>
         <td><span class="badge ${cls}">${r.status}</span></td>
         <td class="reason">${r.reason}</td>
       </tr>`;
@@ -949,7 +894,6 @@
     wrapper.innerHTML = html;
   }
 
-  // ===== init =====
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("search").addEventListener("input", renderTable);
     document.querySelectorAll(".tab").forEach(btn => {
@@ -963,10 +907,8 @@
 
     loadConfig();
 
-    // PER REQUEST #4: check if a workflow is still processing from a prior tab/reload
     const st = getState();
     if (st.processing) {
-      // Resume showing processing state
       clearDashboard();
       const elapsed = Math.floor((Date.now() - st.uploadedAt) / 1000);
       const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
@@ -975,7 +917,6 @@
       setLive("Processing…", "processing");
       startProcessingPoll();
 
-      // If it's been more than 15 minutes, auto-clear (workflow probably timed out / something is off)
       if (elapsed > 900) {
         patchState({ processing: false });
         stopProcessingPoll();
