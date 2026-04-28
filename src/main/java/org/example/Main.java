@@ -59,8 +59,6 @@ import java.util.regex.Pattern;
 
 public class Main {
 
-    // ---------- Domain lists ----------
-
     private static final String[] DISPOSABLE_LISTS = {
         "https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/master/disposable_email_blocklist.conf",
         "https://raw.githubusercontent.com/martenson/disposable-email-domains/master/disposable_email_blocklist.conf",
@@ -72,7 +70,8 @@ public class Main {
         "youzimail.com", "clowtmail.com", "tmail.cl", "fast-temp-mail.info",
         "deepmails.org", "shieldedpost.net", "vertexinbox.com", "temailz.com",
         "mailinator.com", "10minutemail.com", "guerrillamail.com", "throwaway.email",
-        "tempinbox.com", "tempr.email", "fakeinbox.com", "yopmail.com"
+        "tempinbox.com", "tempr.email", "fakeinbox.com", "yopmail.com",
+        "mypethealh.com", "hacknapp.com", "poisonword.com"
     ));
 
     private static final String[] DISPOSABLE_SUFFIX_PATTERNS = {
@@ -146,6 +145,15 @@ public class Main {
     private static final Pattern DOMAIN_RE =
             Pattern.compile("^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$");
 
+    /** Holds everything we know about one domain after classification. */
+    private static class Result {
+        final String domain;
+        final long count;
+        String status;
+        String reason;
+        Result(String d, long c) { this.domain = d; this.count = c; }
+    }
+
     public static void main(String[] args) throws Exception {
         String inputFile  = "Domain.xlsx";
         String csvFile    = "Domain.csv";
@@ -164,73 +172,100 @@ public class Main {
         Sheet inputSheet = workbook.getSheetAt(0);
         DataFormatter formatter = new DataFormatter();
 
-        List<String> domains = new ArrayList<>();
+        // Read both column A (domain) and column B (count) if present
+        List<Result> rows = new ArrayList<>();
         for (int i = 1; i <= inputSheet.getLastRowNum(); i++) {
             Row row = inputSheet.getRow(i);
             if (row == null) continue;
-            Cell cell = row.getCell(0);
-            if (cell == null) continue;
-            String raw = formatter.formatCellValue(cell).trim().toLowerCase();
+            Cell cellA = row.getCell(0);
+            if (cellA == null) continue;
+
+            String raw = formatter.formatCellValue(cellA).trim().toLowerCase();
             if (raw.isEmpty()) continue;
             if (raw.startsWith("row label") || raw.startsWith("grand total")) continue;
+
             String d = raw.contains("@") ? raw.substring(raw.indexOf('@') + 1) : raw;
             d = d.replaceFirst("^https?://", "").replaceFirst("/.*$", "");
-            domains.add(d);
-        }
-        log("Domains to classify: " + domains.size());
 
-        Map<String, String[]> results = new LinkedHashMap<>();
+            long count = 1;
+            Cell cellB = row.getCell(1);
+            if (cellB != null) {
+                String c = formatter.formatCellValue(cellB).trim().replace(",", "");
+                try {
+                    if (!c.isEmpty()) count = Long.parseLong(c);
+                } catch (NumberFormatException ignore) {}
+            }
+
+            rows.add(new Result(d, count));
+        }
+        log("Domains to classify: " + rows.size());
+
+        // First pass: offline classification
         Set<String> needsMx = new LinkedHashSet<>();
-        for (String d : domains) {
-            String[] r = classifyOffline(d, disposable);
-            results.put(d, r);
-            if (r[0].equals("UNKNOWN")) needsMx.add(d);
+        for (Result r : rows) {
+            String[] cls = classifyOffline(r.domain, disposable);
+            r.status = cls[0];
+            r.reason = cls[1];
+            if (r.status.equals("UNKNOWN")) needsMx.add(r.domain);
         }
 
+        // Edit-distance typo pass
         log("Running edit-distance typo detection...");
-        for (String d : new ArrayList<>(needsMx)) {
-            String suggestion = nearestSafeDomain(d);
-            if (suggestion != null) {
-                results.put(d, new String[]{"TYPO", "Likely typo of " + suggestion});
-                needsMx.remove(d);
+        for (Result r : rows) {
+            if (r.status.equals("UNKNOWN")) {
+                String suggestion = nearestSafeDomain(r.domain);
+                if (suggestion != null) {
+                    r.status = "TYPO";
+                    r.reason = "Likely typo of " + suggestion;
+                    needsMx.remove(r.domain);
+                }
             }
         }
 
+        // MX lookup pass for remaining UNKNOWN
         log("MX lookups for " + needsMx.size() + " domains...");
         Map<String, Boolean> mx = parallelMxLookups(needsMx);
-
-        for (Map.Entry<String, Boolean> e : mx.entrySet()) {
-            if (e.getValue()) {
-                results.put(e.getKey(), new String[]{"VALID DOMAIN", "Has working MX/A record"});
-            } else {
-                results.put(e.getKey(), new String[]{"NO MX", "No mail records found"});
+        for (Result r : rows) {
+            if (r.status.equals("UNKNOWN") && mx.containsKey(r.domain)) {
+                if (mx.get(r.domain)) {
+                    r.status = "VALID DOMAIN";
+                    r.reason = "Has working MX/A record";
+                } else {
+                    r.status = "NO MX";
+                    r.reason = "No mail records found";
+                }
             }
         }
 
-        int safe = 0, validDomain = 0, bad = 0, unknown = 0;
-        for (String[] r : results.values()) {
-            switch (r[0]) {
-                case "SAFE":          safe++; break;
-                case "VALID DOMAIN":  validDomain++; break;
+        // Tally domain-counts AND record-counts
+        int safeD = 0, validD = 0, badD = 0, unknownD = 0;
+        long safeR = 0, validR = 0, badR = 0, unknownR = 0;
+        for (Result r : rows) {
+            switch (r.status) {
+                case "SAFE":          safeD++;    safeR    += r.count; break;
+                case "VALID DOMAIN":  validD++;   validR   += r.count; break;
                 case "DISPOSABLE":
                 case "TYPO":
                 case "INVALID":
-                case "NO MX":         bad++; break;
-                default:              unknown++; break;
+                case "NO MX":         badD++;     badR     += r.count; break;
+                default:              unknownD++; unknownR += r.count; break;
             }
         }
+        long totalR = safeR + validR + badR + unknownR;
 
-        writeExcel(workbook, inputFile, results);
-        writeCsv(csvFile, results);
-        writePdf(pdfFile, results, safe, validDomain, bad, unknown);
+        writeExcel(workbook, inputFile, rows);
+        writeCsv(csvFile, rows);
+        writePdf(pdfFile, rows, safeD, validD, badD, unknownD,
+                 safeR, validR, badR, unknownR, totalR);
 
         log("");
         log("=========== SUMMARY ===========");
-        log("SAFE          : " + safe);
-        log("VALID DOMAIN  : " + validDomain);
-        log("BAD           : " + bad);
-        log("UNKNOWN       : " + unknown);
-        log("Total         : " + (safe + validDomain + bad + unknown));
+        log(String.format("SAFE          : %4d domains  (%,d records)", safeD, safeR));
+        log(String.format("VALID DOMAIN  : %4d domains  (%,d records)", validD, validR));
+        log(String.format("BAD           : %4d domains  (%,d records)", badD, badR));
+        log(String.format("UNKNOWN       : %4d domains  (%,d records)", unknownD, unknownR));
+        log(String.format("TOTAL         : %4d domains  (%,d records)",
+                safeD + validD + badD + unknownD, totalR));
         log("================================");
         log("Files written: " + inputFile + ", " + csvFile + ", " + pdfFile);
     }
@@ -354,8 +389,7 @@ public class Main {
 
     // ---------- Output writers ----------
 
-    private static void writeExcel(Workbook wb, String path, Map<String, String[]> results)
-            throws IOException {
+    private static void writeExcel(Workbook wb, String path, List<Result> rows) throws IOException {
         int idx = wb.getSheetIndex("Results");
         if (idx != -1) wb.removeSheetAt(idx);
         Sheet s = wb.createSheet("Results");
@@ -367,21 +401,24 @@ public class Main {
 
         Row header = s.createRow(0);
         header.createCell(0).setCellValue("Domain");
-        header.createCell(1).setCellValue("Status");
-        header.createCell(2).setCellValue("Reason");
+        header.createCell(1).setCellValue("Records");
+        header.createCell(2).setCellValue("Status");
+        header.createCell(3).setCellValue("Reason");
 
         int r = 1;
-        for (Map.Entry<String, String[]> e : results.entrySet()) {
+        for (Result rr : rows) {
             Row row = s.createRow(r++);
-            row.createCell(0).setCellValue(e.getKey());
-            Cell statusCell = row.createCell(1);
-            statusCell.setCellValue(e.getValue()[0]);
-            statusCell.setCellStyle(styleFor(e.getValue()[0], green, paleGreen, red, yellow));
-            row.createCell(2).setCellValue(e.getValue()[1]);
+            row.createCell(0).setCellValue(rr.domain);
+            row.createCell(1).setCellValue(rr.count);
+            Cell statusCell = row.createCell(2);
+            statusCell.setCellValue(rr.status);
+            statusCell.setCellStyle(styleFor(rr.status, green, paleGreen, red, yellow));
+            row.createCell(3).setCellValue(rr.reason);
         }
         s.setColumnWidth(0, 10000);
-        s.setColumnWidth(1, 4500);
-        s.setColumnWidth(2, 16000);
+        s.setColumnWidth(1, 3000);
+        s.setColumnWidth(2, 4500);
+        s.setColumnWidth(3, 16000);
 
         try (FileOutputStream fos = new FileOutputStream(path)) {
             wb.write(fos);
@@ -389,11 +426,12 @@ public class Main {
         wb.close();
     }
 
-    private static void writeCsv(String path, Map<String, String[]> results) throws IOException {
+    private static void writeCsv(String path, List<Result> rows) throws IOException {
         try (PrintWriter pw = new PrintWriter(new FileWriter(path))) {
-            pw.println("Domain,Status,Reason");
-            for (Map.Entry<String, String[]> e : results.entrySet()) {
-                pw.println(csvEscape(e.getKey()) + "," + csvEscape(e.getValue()[0]) + "," + csvEscape(e.getValue()[1]));
+            pw.println("Domain,Records,Status,Reason");
+            for (Result r : rows) {
+                pw.println(csvEscape(r.domain) + "," + r.count + ","
+                        + csvEscape(r.status) + "," + csvEscape(r.reason));
             }
         }
     }
@@ -405,15 +443,17 @@ public class Main {
         return s;
     }
 
-    private static void writePdf(String path, Map<String, String[]> results,
-                                 int safe, int valid, int bad, int unknown) throws Exception {
+    private static void writePdf(String path, List<Result> rows,
+                                 int safeD, int validD, int badD, int unknownD,
+                                 long safeR, long validR, long badR, long unknownR,
+                                 long totalR) throws Exception {
         Document doc = new Document(PageSize.A4, 36, 36, 48, 48);
         PdfWriter.getInstance(doc, new FileOutputStream(path));
         doc.open();
 
         Font titleFont = new Font(Font.HELVETICA, 18, Font.BOLD);
         Font h2Font    = new Font(Font.HELVETICA, 13, Font.BOLD);
-        Font bodyFont  = new Font(Font.HELVETICA, 10);
+        Font bodyFont  = new Font(Font.HELVETICA, 9);
         Font small     = new Font(Font.HELVETICA, 9);
 
         Paragraph title = new Paragraph("Domain Verification Report", titleFont);
@@ -425,61 +465,122 @@ public class Main {
         subtitle.setSpacingAfter(16);
         doc.add(subtitle);
 
+        // Summary table — both unique-domains and total-records
         doc.add(new Paragraph("Summary", h2Font));
-        PdfPTable summary = new PdfPTable(2);
-        summary.setWidthPercentage(60);
+        PdfPTable summary = new PdfPTable(new float[]{4, 1.5f, 1.8f, 1.5f});
+        summary.setWidthPercentage(85);
         summary.setSpacingBefore(6);
         summary.setSpacingAfter(20);
-        summary.setHorizontalAlignment(Element.ALIGN_LEFT);
 
-        addSummaryRow(summary, "SAFE (known providers)",        String.valueOf(safe),  new Color(220, 252, 231));
-        addSummaryRow(summary, "VALID DOMAIN (real companies)", String.valueOf(valid), new Color(207, 250, 254));
-        addSummaryRow(summary, "BAD (disposable/typo/no-MX)",   String.valueOf(bad),   new Color(254, 226, 226));
-        addSummaryRow(summary, "UNKNOWN (manual review)",       String.valueOf(unknown), new Color(254, 249, 195));
-        addSummaryRow(summary, "TOTAL",                         String.valueOf(safe + valid + bad + unknown),
-                new Color(241, 245, 249));
+        Color headerBg = new Color(241, 245, 249);
+        addHeaderCell(summary, "Category", headerBg);
+        addHeaderCell(summary, "Domains", headerBg);
+        addHeaderCell(summary, "Records", headerBg);
+        addHeaderCell(summary, "% of total", headerBg);
+
+        addSummaryRow(summary, "SAFE (known providers)",
+                safeD, safeR, totalR, new Color(220, 252, 231));
+        addSummaryRow(summary, "VALID DOMAIN (real companies)",
+                validD, validR, totalR, new Color(207, 250, 254));
+        addSummaryRow(summary, "BAD (disposable/typo/no-MX)",
+                badD, badR, totalR, new Color(254, 226, 226));
+        addSummaryRow(summary, "UNKNOWN (manual review)",
+                unknownD, unknownR, totalR, new Color(254, 249, 195));
+        addSummaryRow(summary, "TOTAL",
+                safeD + validD + badD + unknownD, totalR, totalR, new Color(241, 245, 249));
         doc.add(summary);
 
+        // Top BAD domains by record count (most impactful fixes)
+        doc.add(new Paragraph("Top problem domains (by records affected)", h2Font));
+        PdfPTable top = new PdfPTable(new float[]{4, 1.5f, 2, 5});
+        top.setWidthPercentage(100);
+        top.setSpacingBefore(6);
+        top.setSpacingAfter(20);
+        addHeaderCell(top, "Domain", headerBg);
+        addHeaderCell(top, "Records", headerBg);
+        addHeaderCell(top, "Status", headerBg);
+        addHeaderCell(top, "Reason", headerBg);
+
+        rows.stream()
+                .filter(r -> isBad(r.status))
+                .sorted((a, b) -> Long.compare(b.count, a.count))
+                .limit(15)
+                .forEach(r -> {
+                    Color bg = colorFor(r.status);
+                    top.addCell(makeCell(r.domain, bodyFont, bg));
+                    top.addCell(makeCellRight(String.valueOf(r.count), bodyFont, bg));
+                    top.addCell(makeCell(r.status, bodyFont, bg));
+                    top.addCell(makeCell(r.reason, bodyFont, bg));
+                });
+        doc.add(top);
+
+        // Full table
         doc.add(new Paragraph("Full Results", h2Font));
-        PdfPTable table = new PdfPTable(new float[]{4, 2, 5});
+        PdfPTable table = new PdfPTable(new float[]{4, 1.5f, 2, 5});
         table.setWidthPercentage(100);
         table.setSpacingBefore(6);
         table.setHeaderRows(1);
 
-        for (String h : new String[]{"Domain", "Status", "Reason"}) {
-            PdfPCell c = new PdfPCell(new Phrase(h, new Font(Font.HELVETICA, 10, Font.BOLD)));
-            c.setBackgroundColor(new Color(241, 245, 249));
-            c.setPadding(6);
-            table.addCell(c);
-        }
+        addHeaderCell(table, "Domain", headerBg);
+        addHeaderCell(table, "Records", headerBg);
+        addHeaderCell(table, "Status", headerBg);
+        addHeaderCell(table, "Reason", headerBg);
 
-        for (Map.Entry<String, String[]> e : results.entrySet()) {
-            String status = e.getValue()[0];
-            Color bg = colorFor(status);
-            table.addCell(makeCell(e.getKey(), bodyFont, bg));
-            table.addCell(makeCell(status, bodyFont, bg));
-            table.addCell(makeCell(e.getValue()[1], bodyFont, bg));
+        for (Result r : rows) {
+            Color bg = colorFor(r.status);
+            table.addCell(makeCell(r.domain, bodyFont, bg));
+            table.addCell(makeCellRight(String.valueOf(r.count), bodyFont, bg));
+            table.addCell(makeCell(r.status, bodyFont, bg));
+            table.addCell(makeCell(r.reason, bodyFont, bg));
         }
         doc.add(table);
 
         doc.close();
     }
 
-    private static void addSummaryRow(PdfPTable t, String label, String count, Color bg) {
+    private static boolean isBad(String status) {
+        return status.equals("DISPOSABLE") || status.equals("TYPO")
+                || status.equals("INVALID") || status.equals("NO MX");
+    }
+
+    private static void addHeaderCell(PdfPTable t, String text, Color bg) {
+        Font f = new Font(Font.HELVETICA, 10, Font.BOLD);
+        PdfPCell c = new PdfPCell(new Phrase(text, f));
+        c.setBackgroundColor(bg);
+        c.setPadding(6);
+        t.addCell(c);
+    }
+
+    private static void addSummaryRow(PdfPTable t, String label,
+                                       int domainCount, long recordCount, long totalRecords,
+                                       Color bg) {
         Font labelFont = new Font(Font.HELVETICA, 11);
-        Font countFont = new Font(Font.HELVETICA, 11, Font.BOLD);
+        Font numFont   = new Font(Font.HELVETICA, 11, Font.BOLD);
         PdfPCell l = new PdfPCell(new Phrase(label, labelFont));
-        PdfPCell c = new PdfPCell(new Phrase(count, countFont));
-        l.setBackgroundColor(bg); c.setBackgroundColor(bg);
-        l.setPadding(6); c.setPadding(6);
-        c.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        t.addCell(l); t.addCell(c);
+        PdfPCell d = new PdfPCell(new Phrase(String.format("%,d", domainCount), numFont));
+        PdfPCell r = new PdfPCell(new Phrase(String.format("%,d", recordCount), numFont));
+        double pct = totalRecords > 0 ? (100.0 * recordCount / totalRecords) : 0;
+        PdfPCell p = new PdfPCell(new Phrase(String.format("%.1f%%", pct), numFont));
+        for (PdfPCell c : new PdfPCell[]{l, d, r, p}) {
+            c.setBackgroundColor(bg);
+            c.setPadding(6);
+        }
+        d.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        r.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        p.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        t.addCell(l); t.addCell(d); t.addCell(r); t.addCell(p);
     }
 
     private static PdfPCell makeCell(String text, Font font, Color bg) {
         PdfPCell c = new PdfPCell(new Phrase(text, font));
         c.setBackgroundColor(bg);
         c.setPadding(4);
+        return c;
+    }
+
+    private static PdfPCell makeCellRight(String text, Font font, Color bg) {
+        PdfPCell c = makeCell(text, font, bg);
+        c.setHorizontalAlignment(Element.ALIGN_RIGHT);
         return c;
     }
 
