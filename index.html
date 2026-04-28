@@ -3,166 +3,503 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Email Verification</title>
+  <title>Domain Verification · Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 0;
-      padding: 2rem;
-      background: #f5f7fa;
-      color: #1f2937;
-    }
-    h1 { margin: 0 0 0.25rem 0; }
-    .subtitle { color: #6b7280; margin-bottom: 1.5rem; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .panel {
-      background: #fff;
-      padding: 1.25rem;
-      border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      margin-bottom: 1.5rem;
+    :root {
+      --bg-0: #0a0e1a;
+      --bg-1: #0f1424;
+      --bg-2: #161b2e;
+      --bg-3: #1f2541;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-bright: rgba(255, 255, 255, 0.14);
+      --text-1: #f1f5f9;
+      --text-2: #94a3b8;
+      --text-3: #64748b;
+      --green: #34d399;
+      --green-bg: rgba(52, 211, 153, 0.12);
+      --blue: #60a5fa;
+      --blue-bg: rgba(96, 165, 250, 0.12);
+      --red: #f87171;
+      --red-bg: rgba(248, 113, 113, 0.12);
+      --yellow: #fbbf24;
+      --yellow-bg: rgba(251, 191, 36, 0.12);
+      --purple: #a78bfa;
+      --shadow-glow: 0 0 0 1px var(--border), 0 8px 32px rgba(0, 0, 0, 0.4);
     }
-    .panel h2 { margin: 0 0 0.75rem 0; font-size: 1.05rem; }
 
-    .row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
-    input[type="text"], input[type="password"], input[type="file"] {
-      padding: 0.5rem 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 0.95rem;
-    }
-    input[type="text"], input[type="password"] { flex: 1; min-width: 220px; }
+    html, body { background: var(--bg-0); color: var(--text-1); font-family: 'Inter', sans-serif; min-height: 100vh; }
 
-    button, a.btn {
-      padding: 0.5rem 1rem;
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
+    /* Aurora background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(96, 165, 250, 0.15), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(167, 139, 250, 0.12), transparent),
+        radial-gradient(ellipse 70% 50% at 50% 100%, rgba(52, 211, 153, 0.08), transparent);
+      z-index: -1;
+      pointer-events: none;
     }
-    button:hover, a.btn:hover { background: #1d4ed8; }
-    button.secondary { background: #6b7280; }
-    button.secondary:hover { background: #4b5563; }
-    button:disabled { background: #9ca3af; cursor: not-allowed; }
 
-    .msg { margin-top: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.9rem; }
-    .msg.ok    { background: #dcfce7; color: #166534; }
-    .msg.err   { background: #fee2e2; color: #991b1b; }
-    .msg.info  { background: #dbeafe; color: #1e40af; }
+    .app { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+    /* Header */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
     }
-    .card {
-      background: #fff;
-      padding: 1rem 1.25rem;
-      border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    .brand { display: flex; align-items: center; gap: 0.85rem; }
+    .logo {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      border-radius: 11px;
+      display: grid; place-items: center;
+      font-size: 1.25rem; font-weight: 800;
+      box-shadow: 0 4px 24px rgba(96, 165, 250, 0.4);
     }
-    .card .label { font-size: 0.85rem; color: #6b7280; }
-    .card .value { font-size: 1.75rem; font-weight: 700; margin-top: 0.25rem; }
-    .green  .value { color: #16a34a; }
-    .red    .value { color: #dc2626; }
-    .yellow .value { color: #ca8a04; }
-    .total  .value { color: #1f2937; }
+    .brand-text h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    .brand-text p  { font-size: 0.85rem; color: var(--text-2); margin-top: 1px; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
-    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #f3f4f6; }
-    th {
-      background: #f9fafb;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #6b7280;
-    }
-    .badge {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
+    .header-actions { display: flex; gap: 0.5rem; align-items: center; }
+    .live-indicator {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.35rem 0.7rem;
+      background: var(--green-bg);
+      color: var(--green);
       border-radius: 999px;
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       font-weight: 500;
     }
-    .badge.green  { background: #dcfce7; color: #166534; }
-    .badge.red    { background: #fee2e2; color: #991b1b; }
-    .badge.yellow { background: #fef9c3; color: #854d0e; }
+    .pulse {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6); }
+      50%      { opacity: 0.6; box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+    }
 
-    .status { padding: 1rem; color: #6b7280; }
-    details { margin-top: 0.5rem; font-size: 0.85rem; color: #6b7280; }
-    code { background: #f3f4f6; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.85em; }
+    /* Glass card base */
+    .glass {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.55rem 1.1rem;
+      background: var(--bg-3);
+      color: var(--text-1);
+      border: 1px solid var(--border-bright);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.45rem;
+    }
+    .btn:hover { background: var(--bg-2); border-color: var(--border-bright); transform: translateY(-1px); }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      border: none; color: white; font-weight: 600;
+      box-shadow: 0 4px 16px rgba(96, 165, 250, 0.3);
+    }
+    .btn.primary:hover { box-shadow: 0 6px 24px rgba(96, 165, 250, 0.45); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Inputs */
+    .input, select {
+      padding: 0.6rem 0.9rem;
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--text-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: border-color 0.15s ease;
+    }
+    .input:focus, select:focus { outline: none; border-color: var(--blue); }
+    .input::placeholder { color: var(--text-3); }
+
+    /* Layout */
+    .grid { display: grid; gap: 1.25rem; }
+    .grid-cards { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 1.25rem; }
+    .grid-main  { grid-template-columns: 2fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    @media (max-width: 900px) { .grid-main { grid-template-columns: 1fr; } }
+
+    /* Stat cards */
+    .stat {
+      padding: 1.4rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .stat:hover { transform: translateY(-2px); border-color: var(--border-bright); }
+    .stat::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--accent-bg);
+      opacity: 0; transition: opacity 0.2s ease;
+    }
+    .stat:hover::before { opacity: 0.5; }
+    .stat-content { position: relative; z-index: 1; }
+    .stat-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: grid; place-items: center;
+      margin-bottom: 0.85rem;
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+    .stat-label { font-size: 0.78rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
+    .stat-value {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0.3rem 0 0.15rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+    }
+    .stat-sub { font-size: 0.82rem; color: var(--text-3); }
+
+    .stat.safe    { --accent: var(--green);  --accent-bg: var(--green-bg); }
+    .stat.valid   { --accent: var(--blue);   --accent-bg: var(--blue-bg); }
+    .stat.bad     { --accent: var(--red);    --accent-bg: var(--red-bg); }
+    .stat.unknown { --accent: var(--yellow); --accent-bg: var(--yellow-bg); }
+    .stat.total   { --accent: var(--purple); --accent-bg: rgba(167, 139, 250, 0.12); }
+
+    /* Section title */
+    .section-title {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0.9rem; padding: 0 0.25rem;
+    }
+    .section-title h2 { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+    .section-title .meta { font-size: 0.82rem; color: var(--text-3); }
+
+    /* Chart */
+    .chart-card { padding: 1.4rem; }
+    .chart-wrap { position: relative; height: 280px; }
+
+    /* Sidebar/Top problems */
+    .top-problems { padding: 1.4rem; }
+    .problem-row {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .problem-row:last-child { border-bottom: none; }
+    .problem-domain { flex: 1; min-width: 0; }
+    .problem-domain .name { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .problem-domain .reason { font-size: 0.75rem; color: var(--text-3); margin-top: 1px; }
+    .problem-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600; font-size: 0.95rem;
+      color: var(--red);
+    }
+
+    /* Action bar / panels */
+    .panel { padding: 1.4rem; margin-bottom: 1.25rem; }
+    .panel h2 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; letter-spacing: -0.01em; }
+
+    .row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+    .row .input { flex: 1; min-width: 200px; }
+
+    /* Download chips */
+    .dl-grid { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .dl {
+      padding: 0.65rem 1.1rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.88rem; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      border: 1px solid var(--border);
+      transition: all 0.15s ease;
+    }
+    .dl:hover { transform: translateY(-1px); border-color: var(--border-bright); }
+    .dl.xlsx { background: var(--green-bg);  color: var(--green); }
+    .dl.csv  { background: var(--blue-bg);   color: var(--blue); }
+    .dl.pdf  { background: var(--red-bg);    color: var(--red); }
+    .dl-icon { width: 16px; height: 16px; }
+
+    /* Messages */
+    .msg { margin-top: 0.85rem; padding: 0.7rem 0.95rem; border-radius: 10px; font-size: 0.88rem; border: 1px solid transparent; }
+    .msg.ok    { background: var(--green-bg);  color: var(--green);  border-color: rgba(52, 211, 153, 0.25); }
+    .msg.err   { background: var(--red-bg);    color: var(--red);    border-color: rgba(248, 113, 113, 0.25); }
+    .msg.info  { background: var(--blue-bg);   color: var(--blue);   border-color: rgba(96, 165, 250, 0.25); }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.72rem 1rem; text-align: left; font-size: 0.88rem; border-bottom: 1px solid var(--border); }
+    th { background: rgba(255, 255, 255, 0.02); font-weight: 600; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2); }
+    tbody tr { transition: background 0.1s ease; }
+    tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    td.num { text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+    td.domain { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+    .reason { color: var(--text-2); font-size: 0.82rem; }
+
+    /* Status badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.2rem 0.65rem; border-radius: 999px;
+      font-size: 0.74rem; font-weight: 600; letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .badge.green  { background: var(--green-bg);  color: var(--green); }
+    .badge.blue   { background: var(--blue-bg);   color: var(--blue); }
+    .badge.red    { background: var(--red-bg);    color: var(--red); }
+    .badge.yellow { background: var(--yellow-bg); color: var(--yellow); }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 0.25rem;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      padding: 0.25rem; border-radius: 11px;
+      width: fit-content;
+      margin-bottom: 1rem;
+    }
+    .tab {
+      padding: 0.45rem 0.95rem;
+      border: none; background: transparent; cursor: pointer;
+      color: var(--text-2);
+      font-family: inherit; font-size: 0.85rem; font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+    .tab:hover { color: var(--text-1); }
+    .tab.active { background: var(--bg-3); color: var(--text-1); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+    /* PDF iframe */
+    .pdf-frame { width: 100%; height: 800px; border: none; border-radius: 12px; background: var(--bg-1); }
+
+    /* Loading */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-2) 0%, var(--bg-3) 50%, var(--bg-2) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite; border-radius: 8px;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    .empty { padding: 3rem; text-align: center; color: var(--text-3); }
+    details summary { cursor: pointer; color: var(--text-2); font-size: 0.85rem; padding: 0.3rem 0; }
+    details summary:hover { color: var(--text-1); }
+    details p { color: var(--text-3); font-size: 0.85rem; padding: 0.5rem 0; line-height: 1.6; }
+    code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
   </style>
 </head>
 <body>
+<div class="app">
 
-  <h1>Email Verification</h1>
-  <p class="subtitle">Upload a list, the workflow runs, and the results appear below.</p>
+  <!-- ============ HEADER ============ -->
+  <header>
+    <div class="brand">
+      <div class="logo">⊚</div>
+      <div class="brand-text">
+        <h1>Domain Verifier</h1>
+        <p>Real-time email domain classification</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="live-indicator"><span class="pulse"></span> Live data</span>
+      <button class="btn" onclick="loadResults()">↻ Refresh</button>
+    </div>
+  </header>
 
-  <!-- ============ CONFIG ============ -->
-  <div class="panel">
-    <h2>Repo settings</h2>
-    <div class="row">
-      <input type="text" id="repoOwner" placeholder="GitHub username (e.g. pavan)" />
-      <input type="text" id="repoName"  placeholder="Repo name (e.g. email-verifier)" />
-      <input type="text" id="repoBranch" placeholder="Branch (default: main)" value="main" />
+  <!-- ============ STAT CARDS ============ -->
+  <div class="grid grid-cards">
+    <div class="stat glass safe">
+      <div class="stat-content">
+        <div class="stat-icon">✓</div>
+        <div class="stat-label">Safe Providers</div>
+        <div class="stat-value" id="count-safe">—</div>
+        <div class="stat-sub" id="rec-safe">&nbsp;</div>
+      </div>
     </div>
-    <div class="row" style="margin-top: 0.75rem;">
-      <input type="password" id="ghToken" placeholder="GitHub Personal Access Token (kept in this browser only)" />
-      <button onclick="saveConfig()">Save</button>
-      <button class="secondary" onclick="clearConfig()">Clear</button>
+    <div class="stat glass valid">
+      <div class="stat-content">
+        <div class="stat-icon">⊡</div>
+        <div class="stat-label">Valid Domains</div>
+        <div class="stat-value" id="count-valid">—</div>
+        <div class="stat-sub" id="rec-valid">&nbsp;</div>
+      </div>
     </div>
-    <details>
-      <summary>How to get a token</summary>
-      <p>Go to <strong>GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens &rarr; Generate new token</strong>. Give it access to <em>only this repo</em>, with <strong>Repository permissions &rarr; Contents: Read and write</strong>. Paste it above. It's stored in your browser's localStorage and never leaves this page except to call api.github.com.</p>
-    </details>
-    <div id="configMsg"></div>
+    <div class="stat glass bad">
+      <div class="stat-content">
+        <div class="stat-icon">⚠</div>
+        <div class="stat-label">Bad / Suspicious</div>
+        <div class="stat-value" id="count-bad">—</div>
+        <div class="stat-sub" id="rec-bad">&nbsp;</div>
+      </div>
+    </div>
+    <div class="stat glass unknown">
+      <div class="stat-content">
+        <div class="stat-icon">?</div>
+        <div class="stat-label">Unknown</div>
+        <div class="stat-value" id="count-unknown">—</div>
+        <div class="stat-sub" id="rec-unknown">&nbsp;</div>
+      </div>
+    </div>
+    <div class="stat glass total">
+      <div class="stat-content">
+        <div class="stat-icon">∑</div>
+        <div class="stat-label">Total Records</div>
+        <div class="stat-value" id="count-total">—</div>
+        <div class="stat-sub" id="rec-total">&nbsp;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CHART + TOP PROBLEMS ============ -->
+  <div class="grid grid-main">
+    <div class="glass chart-card">
+      <div class="section-title">
+        <h2>Distribution by category</h2>
+        <span class="meta" id="chart-meta">Records weighted</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="distChart"></canvas>
+      </div>
+    </div>
+
+    <div class="glass top-problems">
+      <div class="section-title">
+        <h2>Top problem domains</h2>
+        <span class="meta">By records affected</span>
+      </div>
+      <div id="top-problems-list">
+        <div class="empty">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DOWNLOADS ============ -->
+  <div class="glass panel">
+    <h2>Latest results</h2>
+    <div class="dl-grid">
+      <a class="dl xlsx" href="Domain.xlsx" download>
+        <svg class="dl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Excel (.xlsx)
+      </a>
+      <a class="dl csv" href="Domain.csv" download>
+        <svg class="dl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        CSV (.csv)
+      </a>
+      <a class="dl pdf" href="Domain.pdf" target="_blank">
+        <svg class="dl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        PDF Report
+      </a>
+    </div>
+  </div>
+
+  <!-- ============ TABLE WITH TABS ============ -->
+  <div class="glass panel">
+    <div class="section-title">
+      <h2>Domain breakdown</h2>
+      <span class="meta" id="table-count">—</span>
+    </div>
+
+    <div class="tabs" id="status-tabs">
+      <button class="tab active" data-status="">All</button>
+      <button class="tab" data-status="SAFE">Safe</button>
+      <button class="tab" data-status="VALID DOMAIN">Valid</button>
+      <button class="tab" data-status="DISPOSABLE">Disposable</button>
+      <button class="tab" data-status="TYPO">Typo</button>
+      <button class="tab" data-status="NO MX">No MX</button>
+      <button class="tab" data-status="UNKNOWN">Unknown</button>
+    </div>
+
+    <div class="row" style="margin-bottom: 1rem;">
+      <input type="text" class="input" id="search" placeholder="Filter by domain or reason..." />
+    </div>
+
+    <div class="table-wrap" id="table-wrapper">
+      <div class="empty">Loading…</div>
+    </div>
   </div>
 
   <!-- ============ UPLOAD ============ -->
-  <div class="panel">
+  <div class="glass panel">
     <h2>Upload new Domain.xlsx</h2>
     <div class="row">
-      <input type="file" id="fileInput" accept=".xlsx" />
-      <button id="uploadBtn" onclick="uploadFile()">Upload &amp; Trigger Workflow</button>
+      <input type="file" class="input" id="fileInput" accept=".xlsx" />
+      <button class="btn primary" id="uploadBtn" onclick="uploadFile()">⤴ Upload &amp; trigger</button>
     </div>
     <div id="uploadMsg"></div>
   </div>
 
-  <!-- ============ RESULTS ============ -->
-  <div class="summary">
-    <div class="card green"><div class="label">Safe / Valid</div><div class="value" id="count-green">&ndash;</div></div>
-    <div class="card red"><div class="label">Invalid / Risky</div><div class="value" id="count-red">&ndash;</div></div>
-    <div class="card yellow"><div class="label">Unknown / Other</div><div class="value" id="count-yellow">&ndash;</div></div>
-    <div class="card total"><div class="label">Total</div><div class="value" id="count-total">&ndash;</div></div>
+  <!-- ============ CONFIG ============ -->
+  <div class="glass panel">
+    <h2>Repository settings</h2>
+    <div class="row">
+      <input type="text" class="input" id="repoOwner" placeholder="GitHub username" />
+      <input type="text" class="input" id="repoName"  placeholder="Repo name" />
+      <input type="text" class="input" id="repoBranch" placeholder="Branch (default: main)" value="main" style="max-width: 160px;" />
+    </div>
+    <div class="row" style="margin-top: 0.7rem;">
+      <input type="password" class="input" id="ghToken" placeholder="GitHub Personal Access Token (browser-only)" />
+      <button class="btn primary" onclick="saveConfig()">Save</button>
+      <button class="btn" onclick="clearConfig()">Clear</button>
+    </div>
+    <details style="margin-top: 0.85rem;">
+      <summary>How to get a token</summary>
+      <p>GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token. Repository permissions → <code>Contents: Read and write</code>. Stored only in this browser.</p>
+    </details>
+    <div id="configMsg"></div>
   </div>
 
-  <div class="panel">
-    <div class="row" style="margin-bottom: 0.75rem;">
-      <input type="text" id="search" placeholder="Filter by email or status..." />
-      <button class="secondary" onclick="loadResults()">Refresh</button>
-      <a class="btn" href="Domain.xlsx" download>Download Excel</a>
-    </div>
-    <div id="table-wrapper">
-      <p class="status">Loading&hellip;</p>
-    </div>
+  <!-- ============ PDF EMBED ============ -->
+  <div class="glass panel">
+    <h2>PDF report preview</h2>
+    <iframe class="pdf-frame" id="pdf-frame" src="Domain.pdf"></iframe>
   </div>
+
+</div>
 
 <script>
-  // ---------- config persistence ----------
+  // ---------- helpers ----------
+  const fmt = n => Number(n || 0).toLocaleString();
+
+  function classify(status) {
+    const s = String(status || "").toUpperCase();
+    if (s === "SAFE") return "green";
+    if (s === "VALID DOMAIN") return "blue";
+    if (s === "DISPOSABLE" || s === "TYPO" || s === "NO MX" || s === "INVALID") return "red";
+    return "yellow";
+  }
+
+  function showMsg(id, text, kind) {
+    document.getElementById(id).innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
+  }
+
+  // animated counter
+  function animateNumber(el, from, to, duration = 800) {
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const value = Math.round(from + (to - from) * eased);
+      el.textContent = fmt(value);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ---------- config ----------
   function saveConfig() {
     const cfg = {
       owner:  document.getElementById("repoOwner").value.trim(),
@@ -171,14 +508,12 @@
       token:  document.getElementById("ghToken").value.trim()
     };
     localStorage.setItem("ev_cfg", JSON.stringify(cfg));
-    showMsg("configMsg", "Saved.", "ok");
+    showMsg("configMsg", "Configuration saved.", "ok");
   }
   function clearConfig() {
     localStorage.removeItem("ev_cfg");
-    document.getElementById("repoOwner").value = "";
-    document.getElementById("repoName").value = "";
+    ["repoOwner","repoName","ghToken"].forEach(id => document.getElementById(id).value = "");
     document.getElementById("repoBranch").value = "main";
-    document.getElementById("ghToken").value = "";
     showMsg("configMsg", "Cleared.", "info");
   }
   function loadConfig() {
@@ -188,8 +523,7 @@
       if (cfg.name)   document.getElementById("repoName").value  = cfg.name;
       if (cfg.branch) document.getElementById("repoBranch").value = cfg.branch;
       if (cfg.token)  document.getElementById("ghToken").value   = cfg.token;
-      return cfg;
-    } catch { return {}; }
+    } catch {}
   }
   function getConfig() {
     return {
@@ -199,30 +533,21 @@
       token:  document.getElementById("ghToken").value.trim()
     };
   }
-  function showMsg(id, text, kind) {
-    const el = document.getElementById(id);
-    el.innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
-  }
 
-  // ---------- upload via GitHub API ----------
+  // ---------- upload ----------
   async function uploadFile() {
     const cfg = getConfig();
     if (!cfg.owner || !cfg.name || !cfg.token) {
-      showMsg("uploadMsg", "Fill in repo owner, name, and token first.", "err");
-      return;
+      showMsg("uploadMsg", "Configure repo settings first.", "err"); return;
     }
     const fileEl = document.getElementById("fileInput");
-    if (!fileEl.files.length) {
-      showMsg("uploadMsg", "Pick an .xlsx file first.", "err");
-      return;
-    }
+    if (!fileEl.files.length) { showMsg("uploadMsg", "Select an .xlsx file.", "err"); return; }
     const file = fileEl.files[0];
     const btn = document.getElementById("uploadBtn");
     btn.disabled = true;
     showMsg("uploadMsg", "Reading file...", "info");
 
     try {
-      // Convert file to base64 (GitHub Contents API requires base64)
       const buf = await file.arrayBuffer();
       const bytes = new Uint8Array(buf);
       let binary = "";
@@ -239,24 +564,12 @@
         "X-GitHub-Api-Version": "2022-11-28"
       };
 
-      // Need the current file's SHA to overwrite. If file doesn't exist yet, sha = undefined.
-      showMsg("uploadMsg", "Checking existing file...", "info");
       let sha;
       const getRes = await fetch(apiBase + "?ref=" + encodeURIComponent(cfg.branch), { headers });
-      if (getRes.ok) {
-        const meta = await getRes.json();
-        sha = meta.sha;
-      } else if (getRes.status !== 404) {
-        const err = await getRes.json().catch(() => ({}));
-        throw new Error("GET failed: " + getRes.status + " " + (err.message || ""));
-      }
+      if (getRes.ok) sha = (await getRes.json()).sha;
+      else if (getRes.status !== 404) throw new Error("GET failed: " + getRes.status);
 
-      showMsg("uploadMsg", "Uploading to repo...", "info");
-      const body = {
-        message: "chore: upload new Domain.xlsx via web UI",
-        content: b64,
-        branch: cfg.branch
-      };
+      const body = { message: "upload Domain.xlsx", content: b64, branch: cfg.branch };
       if (sha) body.sha = sha;
 
       const putRes = await fetch(apiBase, {
@@ -266,86 +579,218 @@
       });
       if (!putRes.ok) {
         const err = await putRes.json().catch(() => ({}));
-        throw new Error("PUT failed: " + putRes.status + " " + (err.message || ""));
+        throw new Error(putRes.status + " " + (err.message || ""));
       }
 
       const actionsUrl = "https://github.com/" + cfg.owner + "/" + cfg.name + "/actions";
       showMsg("uploadMsg",
-        'Uploaded. The workflow should start automatically &mdash; <a href="' + actionsUrl + '" target="_blank">watch progress here</a>. Refresh this page in a couple of minutes to see the results.',
+        'Uploaded successfully. <a href="' + actionsUrl + '" target="_blank" style="color:inherit;text-decoration:underline;">Watch progress →</a>',
         "ok");
     } catch (err) {
-      showMsg("uploadMsg", "Failed: " + err.message, "err");
+      showMsg("uploadMsg", "Upload failed: " + err.message, "err");
     } finally {
       btn.disabled = false;
     }
   }
 
-  // ---------- results loader ----------
-  function classify(status) {
-    const s = (status || "").toLowerCase();
-    if (s.includes("safe") || s.includes("valid") || s.includes("deliverable") || s.includes("good")) return "green";
-    if (s.includes("temporary") || s.includes("disposable") || s.includes("invalid") || s.includes("risky") || s.includes("failed")) return "red";
-    return "yellow";
-  }
+  // ---------- data + render ----------
+  let allRows = [];
+  let chart = null;
+  let activeStatus = "";
 
   async function loadResults() {
-    const wrapper = document.getElementById("table-wrapper");
-    wrapper.innerHTML = '<p class="status">Loading...</p>';
+    document.getElementById("table-wrapper").innerHTML = '<div class="empty">Loading…</div>';
+    document.getElementById("top-problems-list").innerHTML = '<div class="empty">Loading…</div>';
+
     try {
       const res = await fetch("Domain.xlsx?t=" + Date.now());
       if (!res.ok) throw new Error("HTTP " + res.status);
       const buf = await res.arrayBuffer();
       const wb = XLSX.read(buf, { type: "array" });
-
       const sheetName = wb.SheetNames.includes("Results") ? "Results" : wb.SheetNames[0];
-      const sheet = wb.Sheets[sheetName];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, defval: "" });
 
       if (rows.length < 2) {
-        wrapper.innerHTML = '<p class="status">No results yet. Upload a file and wait for the workflow to finish.</p>';
+        document.getElementById("table-wrapper").innerHTML = '<div class="empty">No results yet. Upload a file and run the workflow.</div>';
         return;
       }
 
-      const dataRows = rows.slice(1).filter(r => r[0]);
-      let g = 0, r = 0, y = 0;
-      const enriched = dataRows.map(row => {
-        const cls = classify(row[1]);
-        if (cls === "green") g++;
-        else if (cls === "red") r++;
-        else y++;
-        return { email: row[0], status: row[1] || "-", cls };
+      const headerRow = rows[0].map(h => String(h).toLowerCase());
+      const has4Col = headerRow.length >= 4 && headerRow[1].includes("record");
+
+      allRows = rows.slice(1).filter(r => r[0]).map(r => has4Col
+        ? { domain: r[0], records: Number(r[1]) || 0, status: String(r[2] || "—").toUpperCase(), reason: r[3] || "" }
+        : { domain: r[0], records: 1,                   status: String(r[1] || "—").toUpperCase(), reason: r[2] || "" }
+      );
+
+      // Tally
+      const tD = {green:0, blue:0, red:0, yellow:0};
+      const tR = {green:0, blue:0, red:0, yellow:0};
+      allRows.forEach(r => {
+        const k = classify(r.status);
+        tD[k]++;
+        tR[k] += r.records;
       });
+      const totalR = tR.green + tR.blue + tR.red + tR.yellow;
 
-      document.getElementById("count-green").textContent = g;
-      document.getElementById("count-red").textContent = r;
-      document.getElementById("count-yellow").textContent = y;
-      document.getElementById("count-total").textContent = enriched.length;
+      // Animate counter values
+      animateNumber(document.getElementById("count-safe"),    0, tD.green);
+      animateNumber(document.getElementById("count-valid"),   0, tD.blue);
+      animateNumber(document.getElementById("count-bad"),     0, tD.red);
+      animateNumber(document.getElementById("count-unknown"), 0, tD.yellow);
+      animateNumber(document.getElementById("count-total"),   0, totalR);
 
-      function render(list) {
-        if (!list.length) { wrapper.innerHTML = '<p class="status">No matches.</p>'; return; }
-        let html = '<table><thead><tr><th>#</th><th>Email</th><th>Status</th></tr></thead><tbody>';
-        list.forEach((row, i) => {
-          html += '<tr><td>' + (i + 1) + '</td><td>' + row.email + '</td><td><span class="badge ' + row.cls + '">' + row.status + '</span></td></tr>';
-        });
-        html += "</tbody></table>";
-        wrapper.innerHTML = html;
-      }
-      render(enriched);
+      document.getElementById("rec-safe").textContent    = fmt(tR.green) + " records";
+      document.getElementById("rec-valid").textContent   = fmt(tR.blue) + " records";
+      document.getElementById("rec-bad").textContent     = fmt(tR.red) + " records";
+      document.getElementById("rec-unknown").textContent = fmt(tR.yellow) + " records";
+      document.getElementById("rec-total").textContent   = allRows.length + " unique domains";
 
-      document.getElementById("search").oninput = e => {
-        const q = e.target.value.toLowerCase();
-        render(enriched.filter(x =>
-          String(x.email).toLowerCase().includes(q) ||
-          String(x.status).toLowerCase().includes(q)
-        ));
-      };
+      renderChart(tR);
+      renderTopProblems();
+      renderTable();
+
+      // bust PDF cache
+      document.getElementById("pdf-frame").src = "Domain.pdf?t=" + Date.now();
+
     } catch (err) {
-      wrapper.innerHTML = '<p class="status">Could not load Domain.xlsx: ' + err.message + '</p>';
+      document.getElementById("table-wrapper").innerHTML = '<div class="empty">Could not load Domain.xlsx: ' + err.message + '</div>';
     }
   }
 
-  loadConfig();
-  loadResults();
+  function renderChart(tR) {
+    const ctx = document.getElementById("distChart");
+    if (chart) chart.destroy();
+
+    const styles = getComputedStyle(document.documentElement);
+    chart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: ["Safe", "Valid", "Bad", "Unknown"],
+        datasets: [{
+          data: [tR.green, tR.blue, tR.red, tR.yellow],
+          backgroundColor: [
+            styles.getPropertyValue('--green').trim(),
+            styles.getPropertyValue('--blue').trim(),
+            styles.getPropertyValue('--red').trim(),
+            styles.getPropertyValue('--yellow').trim()
+          ],
+          borderWidth: 0,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              color: styles.getPropertyValue('--text-1').trim(),
+              font: { family: 'Inter', size: 13 },
+              padding: 14,
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          },
+          tooltip: {
+            backgroundColor: '#0a0e1a',
+            borderColor: 'rgba(255,255,255,0.1)',
+            borderWidth: 1,
+            padding: 12,
+            titleFont: { family: 'Inter', size: 13 },
+            bodyFont: { family: 'Inter', size: 12 },
+            callbacks: {
+              label: ctx => {
+                const v = ctx.parsed;
+                const total = ctx.dataset.data.reduce((a,b) => a+b, 0);
+                const pct = total ? (v/total*100).toFixed(1) : 0;
+                return ` ${ctx.label}: ${fmt(v)} (${pct}%)`;
+              }
+            }
+          }
+        },
+        animation: { animateScale: true, duration: 800 }
+      }
+    });
+  }
+
+  function renderTopProblems() {
+    const list = document.getElementById("top-problems-list");
+    const bad = allRows
+      .filter(r => classify(r.status) === "red")
+      .sort((a, b) => b.records - a.records)
+      .slice(0, 8);
+
+    if (!bad.length) {
+      list.innerHTML = '<div class="empty">No problem domains 🎉</div>';
+      return;
+    }
+
+    list.innerHTML = bad.map(r => `
+      <div class="problem-row">
+        <div class="problem-domain">
+          <div class="name">${r.domain}</div>
+          <div class="reason">${r.status} · ${r.reason}</div>
+        </div>
+        <div class="problem-count">${fmt(r.records)}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderTable() {
+    const wrapper = document.getElementById("table-wrapper");
+    const q = document.getElementById("search").value.toLowerCase();
+
+    const filtered = allRows.filter(r => {
+      if (activeStatus && r.status !== activeStatus) return false;
+      if (!q) return true;
+      return String(r.domain).toLowerCase().includes(q)
+          || String(r.status).toLowerCase().includes(q)
+          || String(r.reason).toLowerCase().includes(q);
+    }).sort((a, b) => b.records - a.records);
+
+    document.getElementById("table-count").textContent =
+      filtered.length === allRows.length
+        ? `${fmt(allRows.length)} domains`
+        : `${fmt(filtered.length)} of ${fmt(allRows.length)}`;
+
+    if (!filtered.length) {
+      wrapper.innerHTML = '<div class="empty">No matches.</div>';
+      return;
+    }
+
+    let html = '<table><thead><tr><th>Domain</th><th style="text-align:right;">Records</th><th>Status</th><th>Reason</th></tr></thead><tbody>';
+    filtered.forEach(r => {
+      const cls = classify(r.status);
+      html += `<tr>
+        <td class="domain">${r.domain}</td>
+        <td class="num">${fmt(r.records)}</td>
+        <td><span class="badge ${cls}">${r.status}</span></td>
+        <td class="reason">${r.reason}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    wrapper.innerHTML = html;
+  }
+
+  // ---------- init ----------
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("search").addEventListener("input", renderTable);
+
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        activeStatus = btn.dataset.status;
+        renderTable();
+      });
+    });
+
+    loadConfig();
+    loadResults();
+  });
 </script>
 </body>
 </html>
