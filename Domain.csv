@@ -1,301 +1,554 @@
 Domain,Records,Status,Reason
-1,1,INVALID,Bad domain syntax
-2,1,INVALID,Bad domain syntax
-3,1,INVALID,Bad domain syntax
-4,1,INVALID,Bad domain syntax
-5,1,INVALID,Bad domain syntax
-6,1,INVALID,Bad domain syntax
-7,1,INVALID,Bad domain syntax
-8,1,INVALID,Bad domain syntax
-9,1,INVALID,Bad domain syntax
-10,1,INVALID,Bad domain syntax
-11,1,INVALID,Bad domain syntax
-12,1,INVALID,Bad domain syntax
-13,1,INVALID,Bad domain syntax
-14,1,INVALID,Bad domain syntax
-15,1,INVALID,Bad domain syntax
-16,1,INVALID,Bad domain syntax
-17,1,INVALID,Bad domain syntax
-18,1,INVALID,Bad domain syntax
-19,1,INVALID,Bad domain syntax
-20,1,INVALID,Bad domain syntax
-21,1,INVALID,Bad domain syntax
-22,1,INVALID,Bad domain syntax
-23,1,INVALID,Bad domain syntax
-24,1,INVALID,Bad domain syntax
-25,1,INVALID,Bad domain syntax
-26,1,INVALID,Bad domain syntax
-27,1,INVALID,Bad domain syntax
-28,1,INVALID,Bad domain syntax
-29,1,INVALID,Bad domain syntax
-30,1,INVALID,Bad domain syntax
-31,1,INVALID,Bad domain syntax
-32,1,INVALID,Bad domain syntax
-33,1,INVALID,Bad domain syntax
-34,1,INVALID,Bad domain syntax
-35,1,INVALID,Bad domain syntax
-36,1,INVALID,Bad domain syntax
-37,1,INVALID,Bad domain syntax
-38,1,INVALID,Bad domain syntax
-39,1,INVALID,Bad domain syntax
-40,1,INVALID,Bad domain syntax
-41,1,INVALID,Bad domain syntax
-42,1,INVALID,Bad domain syntax
-43,1,INVALID,Bad domain syntax
-44,1,INVALID,Bad domain syntax
-45,1,INVALID,Bad domain syntax
-46,1,INVALID,Bad domain syntax
-47,1,INVALID,Bad domain syntax
-48,1,INVALID,Bad domain syntax
-49,1,INVALID,Bad domain syntax
-50,1,INVALID,Bad domain syntax
-51,1,INVALID,Bad domain syntax
-52,1,INVALID,Bad domain syntax
-53,1,INVALID,Bad domain syntax
-54,1,INVALID,Bad domain syntax
-55,1,INVALID,Bad domain syntax
-56,1,INVALID,Bad domain syntax
-57,1,INVALID,Bad domain syntax
-58,1,INVALID,Bad domain syntax
-59,1,INVALID,Bad domain syntax
-60,1,INVALID,Bad domain syntax
-61,1,INVALID,Bad domain syntax
-62,1,INVALID,Bad domain syntax
-63,1,INVALID,Bad domain syntax
-64,1,INVALID,Bad domain syntax
-65,1,INVALID,Bad domain syntax
-66,1,INVALID,Bad domain syntax
-67,1,INVALID,Bad domain syntax
-68,1,INVALID,Bad domain syntax
-69,1,INVALID,Bad domain syntax
-70,1,INVALID,Bad domain syntax
-71,1,INVALID,Bad domain syntax
-72,1,INVALID,Bad domain syntax
-73,1,INVALID,Bad domain syntax
-74,1,INVALID,Bad domain syntax
-75,1,INVALID,Bad domain syntax
-76,1,INVALID,Bad domain syntax
-77,1,INVALID,Bad domain syntax
-78,1,INVALID,Bad domain syntax
-79,1,INVALID,Bad domain syntax
-80,1,INVALID,Bad domain syntax
-81,1,INVALID,Bad domain syntax
-82,1,INVALID,Bad domain syntax
-83,1,INVALID,Bad domain syntax
-84,1,INVALID,Bad domain syntax
-85,1,INVALID,Bad domain syntax
-86,1,INVALID,Bad domain syntax
-87,1,INVALID,Bad domain syntax
-88,1,INVALID,Bad domain syntax
-89,1,INVALID,Bad domain syntax
-90,1,INVALID,Bad domain syntax
-91,1,INVALID,Bad domain syntax
-92,1,INVALID,Bad domain syntax
-93,1,INVALID,Bad domain syntax
-94,1,INVALID,Bad domain syntax
-95,1,INVALID,Bad domain syntax
-96,1,INVALID,Bad domain syntax
-97,1,INVALID,Bad domain syntax
-98,1,INVALID,Bad domain syntax
-99,1,INVALID,Bad domain syntax
-100,1,INVALID,Bad domain syntax
-101,1,INVALID,Bad domain syntax
-102,1,INVALID,Bad domain syntax
-103,1,INVALID,Bad domain syntax
-104,1,INVALID,Bad domain syntax
-105,1,INVALID,Bad domain syntax
-106,1,INVALID,Bad domain syntax
-107,1,INVALID,Bad domain syntax
-108,1,INVALID,Bad domain syntax
-109,1,INVALID,Bad domain syntax
-110,1,INVALID,Bad domain syntax
-111,1,INVALID,Bad domain syntax
-112,1,INVALID,Bad domain syntax
-113,1,INVALID,Bad domain syntax
-114,1,INVALID,Bad domain syntax
-115,1,INVALID,Bad domain syntax
-116,1,INVALID,Bad domain syntax
-117,1,INVALID,Bad domain syntax
-118,1,INVALID,Bad domain syntax
-119,1,INVALID,Bad domain syntax
-120,1,INVALID,Bad domain syntax
-121,1,INVALID,Bad domain syntax
-122,1,INVALID,Bad domain syntax
-123,1,INVALID,Bad domain syntax
-124,1,INVALID,Bad domain syntax
-125,1,INVALID,Bad domain syntax
-126,1,INVALID,Bad domain syntax
-127,1,INVALID,Bad domain syntax
-128,1,INVALID,Bad domain syntax
-129,1,INVALID,Bad domain syntax
-130,1,INVALID,Bad domain syntax
-131,1,INVALID,Bad domain syntax
-132,1,INVALID,Bad domain syntax
-133,1,INVALID,Bad domain syntax
-134,1,INVALID,Bad domain syntax
-135,1,INVALID,Bad domain syntax
-136,1,INVALID,Bad domain syntax
-137,1,INVALID,Bad domain syntax
-138,1,INVALID,Bad domain syntax
-139,1,INVALID,Bad domain syntax
-140,1,INVALID,Bad domain syntax
-141,1,INVALID,Bad domain syntax
-142,1,INVALID,Bad domain syntax
-143,1,INVALID,Bad domain syntax
-144,1,INVALID,Bad domain syntax
-145,1,INVALID,Bad domain syntax
-146,1,INVALID,Bad domain syntax
-147,1,INVALID,Bad domain syntax
-148,1,INVALID,Bad domain syntax
-149,1,INVALID,Bad domain syntax
-150,1,INVALID,Bad domain syntax
-151,1,INVALID,Bad domain syntax
-152,1,INVALID,Bad domain syntax
-153,1,INVALID,Bad domain syntax
-154,1,INVALID,Bad domain syntax
-155,1,INVALID,Bad domain syntax
-156,1,INVALID,Bad domain syntax
-157,1,INVALID,Bad domain syntax
-158,1,INVALID,Bad domain syntax
-159,1,INVALID,Bad domain syntax
-160,1,INVALID,Bad domain syntax
-161,1,INVALID,Bad domain syntax
-162,1,INVALID,Bad domain syntax
-163,1,INVALID,Bad domain syntax
-164,1,INVALID,Bad domain syntax
-165,1,INVALID,Bad domain syntax
-166,1,INVALID,Bad domain syntax
-167,1,INVALID,Bad domain syntax
-168,1,INVALID,Bad domain syntax
-169,1,INVALID,Bad domain syntax
-170,1,INVALID,Bad domain syntax
-171,1,INVALID,Bad domain syntax
-172,1,INVALID,Bad domain syntax
-173,1,INVALID,Bad domain syntax
-174,1,INVALID,Bad domain syntax
-175,1,INVALID,Bad domain syntax
-176,1,INVALID,Bad domain syntax
-177,1,INVALID,Bad domain syntax
-178,1,INVALID,Bad domain syntax
-179,1,INVALID,Bad domain syntax
-180,1,INVALID,Bad domain syntax
-181,1,INVALID,Bad domain syntax
-182,1,INVALID,Bad domain syntax
-183,1,INVALID,Bad domain syntax
-184,1,INVALID,Bad domain syntax
-185,1,INVALID,Bad domain syntax
-186,1,INVALID,Bad domain syntax
-187,1,INVALID,Bad domain syntax
-188,1,INVALID,Bad domain syntax
-189,1,INVALID,Bad domain syntax
-190,1,INVALID,Bad domain syntax
-191,1,INVALID,Bad domain syntax
-192,1,INVALID,Bad domain syntax
-193,1,INVALID,Bad domain syntax
-194,1,INVALID,Bad domain syntax
-195,1,INVALID,Bad domain syntax
-196,1,INVALID,Bad domain syntax
-197,1,INVALID,Bad domain syntax
-198,1,INVALID,Bad domain syntax
-199,1,INVALID,Bad domain syntax
-200,1,INVALID,Bad domain syntax
-201,1,INVALID,Bad domain syntax
-202,1,INVALID,Bad domain syntax
-203,1,INVALID,Bad domain syntax
-204,1,INVALID,Bad domain syntax
-205,1,INVALID,Bad domain syntax
-206,1,INVALID,Bad domain syntax
-207,1,INVALID,Bad domain syntax
-208,1,INVALID,Bad domain syntax
-209,1,INVALID,Bad domain syntax
-210,1,INVALID,Bad domain syntax
-211,1,INVALID,Bad domain syntax
-212,1,INVALID,Bad domain syntax
-213,1,INVALID,Bad domain syntax
-214,1,INVALID,Bad domain syntax
-215,1,INVALID,Bad domain syntax
-216,1,INVALID,Bad domain syntax
-217,1,INVALID,Bad domain syntax
-218,1,INVALID,Bad domain syntax
-219,1,INVALID,Bad domain syntax
-220,1,INVALID,Bad domain syntax
-221,1,INVALID,Bad domain syntax
-222,1,INVALID,Bad domain syntax
-223,1,INVALID,Bad domain syntax
-224,1,INVALID,Bad domain syntax
-225,1,INVALID,Bad domain syntax
-226,1,INVALID,Bad domain syntax
-227,1,INVALID,Bad domain syntax
-228,1,INVALID,Bad domain syntax
-229,1,INVALID,Bad domain syntax
-230,1,INVALID,Bad domain syntax
-231,1,INVALID,Bad domain syntax
-232,1,INVALID,Bad domain syntax
-233,1,INVALID,Bad domain syntax
-234,1,INVALID,Bad domain syntax
-235,1,INVALID,Bad domain syntax
-236,1,INVALID,Bad domain syntax
-237,1,INVALID,Bad domain syntax
-238,1,INVALID,Bad domain syntax
-239,1,INVALID,Bad domain syntax
-240,1,INVALID,Bad domain syntax
-241,1,INVALID,Bad domain syntax
-242,1,INVALID,Bad domain syntax
-243,1,INVALID,Bad domain syntax
-244,1,INVALID,Bad domain syntax
-245,1,INVALID,Bad domain syntax
-246,1,INVALID,Bad domain syntax
-247,1,INVALID,Bad domain syntax
-248,1,INVALID,Bad domain syntax
-249,1,INVALID,Bad domain syntax
-250,1,INVALID,Bad domain syntax
-251,1,INVALID,Bad domain syntax
-252,1,INVALID,Bad domain syntax
-253,1,INVALID,Bad domain syntax
-254,1,INVALID,Bad domain syntax
-255,1,INVALID,Bad domain syntax
-256,1,INVALID,Bad domain syntax
-257,1,INVALID,Bad domain syntax
-258,1,INVALID,Bad domain syntax
-259,1,INVALID,Bad domain syntax
-260,1,INVALID,Bad domain syntax
-261,1,INVALID,Bad domain syntax
-262,1,INVALID,Bad domain syntax
-263,1,INVALID,Bad domain syntax
-264,1,INVALID,Bad domain syntax
-265,1,INVALID,Bad domain syntax
-266,1,INVALID,Bad domain syntax
-267,1,INVALID,Bad domain syntax
-268,1,INVALID,Bad domain syntax
-269,1,INVALID,Bad domain syntax
-270,1,INVALID,Bad domain syntax
-271,1,INVALID,Bad domain syntax
-272,1,INVALID,Bad domain syntax
-273,1,INVALID,Bad domain syntax
-274,1,INVALID,Bad domain syntax
-275,1,INVALID,Bad domain syntax
-276,1,INVALID,Bad domain syntax
-277,1,INVALID,Bad domain syntax
-278,1,INVALID,Bad domain syntax
-279,1,INVALID,Bad domain syntax
-280,1,INVALID,Bad domain syntax
-281,1,INVALID,Bad domain syntax
-282,1,INVALID,Bad domain syntax
-283,1,INVALID,Bad domain syntax
-284,1,INVALID,Bad domain syntax
-285,1,INVALID,Bad domain syntax
-286,1,INVALID,Bad domain syntax
-287,1,INVALID,Bad domain syntax
-288,1,INVALID,Bad domain syntax
-289,1,INVALID,Bad domain syntax
-290,1,INVALID,Bad domain syntax
-291,1,INVALID,Bad domain syntax
-292,1,INVALID,Bad domain syntax
-293,1,INVALID,Bad domain syntax
-294,1,INVALID,Bad domain syntax
-295,1,INVALID,Bad domain syntax
-296,1,INVALID,Bad domain syntax
-297,1,INVALID,Bad domain syntax
-298,1,INVALID,Bad domain syntax
-299,1,INVALID,Bad domain syntax
-300,1,INVALID,Bad domain syntax
+126.com,21,SAFE,Known legitimate provider
+163.ckm,4,TYPO,Likely typo of 163.com
+163.com,59,SAFE,Known legitimate provider
+1utar.my,3,VALID DOMAIN,Has working MX/A record
+2200freefonts.com,3,DISPOSABLE,On disposable-domain blocklist
+4heats.com,57,DISPOSABLE,On disposable-domain blocklist
+95gmail.com,2,DISPOSABLE,On disposable-domain blocklist
+abbott.com,4,VALID DOMAIN,Has working MX/A record
+abv.bg,4,SAFE,Known legitimate provider
+ackresolution.com,1,VALID DOMAIN,Has working MX/A record
+ad.cyberhome.ne.jp,1,VALID DOMAIN,Has working MX/A record
+adam.com.au,14,VALID DOMAIN,Has working MX/A record
+adelaide.edu.au,1,VALID DOMAIN,Has working MX/A record
+adelaidestudentlodge.com,4,VALID DOMAIN,Has working MX/A record
+adelie.co.nz,1,VALID DOMAIN,Has working MX/A record
+aerogen.com,1,VALID DOMAIN,Has working MX/A record
+agc.gov.my,1,VALID DOMAIN,Has working MX/A record
+akbaronline.in,1,VALID DOMAIN,Has working MX/A record
+alexu.edu.eg,1,VALID DOMAIN,Has working MX/A record
+alltypewaterproofing.com.au,1,VALID DOMAIN,Has working MX/A record
+alum.mit.edu,1,VALID DOMAIN,Has working MX/A record
+alumni.iitm.ac.in,1,VALID DOMAIN,Has working MX/A record
+amnifood.com,1,VALID DOMAIN,Has working MX/A record
+ancomnylex.com,1,VALID DOMAIN,Has working MX/A record
+ansell.com,9,VALID DOMAIN,Has working MX/A record
+antnet.net,1,VALID DOMAIN,Has working MX/A record
+aol.com,24,SAFE,Known legitimate provider
+aon.com,1,TYPO,Likely typo of aol.com
+ape-thailand.com,1,VALID DOMAIN,Has working MX/A record
+apg-ga.com.au,1,VALID DOMAIN,Has working MX/A record
+apgroup.com.au,2,VALID DOMAIN,Has working MX/A record
+aratechbis.com,1,VALID DOMAIN,Has working MX/A record
+arcor.de,2,SAFE,Known legitimate provider
+arkib.gov.my,1,VALID DOMAIN,Has working MX/A record
+arrow.org.my,1,VALID DOMAIN,Has working MX/A record
+arsacapasia.com,1,VALID DOMAIN,Has working MX/A record
+artgallery.gov.my,2,VALID DOMAIN,Has working MX/A record
+aryzta.com,1,VALID DOMAIN,Has working MX/A record
+asktai.com,1,VALID DOMAIN,Has working MX/A record
+atlascopco.com,1,VALID DOMAIN,Has working MX/A record
+att.net,1,SAFE,Known legitimate provider
+ausmineeng.com.au,1,VALID DOMAIN,Has working MX/A record
+aussiebroadband.com.au,7,SAFE,Known legitimate provider
+autowingroup.com,5,VALID DOMAIN,Has working MX/A record
+bansalpresses.com,2,VALID DOMAIN,Has working MX/A record
+barchip.com,1,VALID DOMAIN,Has working MX/A record
+barkingowlcommunications.com.au,2,VALID DOMAIN,Has working MX/A record
+barodari.com,1,VALID DOMAIN,Has working MX/A record
+basf.com,1,VALID DOMAIN,Has working MX/A record
+bbraun.com,2,VALID DOMAIN,Has working MX/A record
+beansgrp.com,1,VALID DOMAIN,Has working MX/A record
+bearingssouthwest.com,1,VALID DOMAIN,Has working MX/A record
+beneuballostics.com,3,NO MX,No mail records found
+benten.com.my,1,VALID DOMAIN,Has working MX/A record
+besi.com,1,VALID DOMAIN,Has working MX/A record
+bestflights.co.th,7,VALID DOMAIN,Has working MX/A record
+beyond2u.com,1,VALID DOMAIN,Has working MX/A record
+bigpond.com,50,SAFE,Known legitimate provider
+bigpond.net.au,9,SAFE,Known legitimate provider
+bigpond.net.su,2,TYPO,Likely typo of bigpond.net.au
+bigpong.com,5,TYPO,Likely typo of bigpond.com
+binnenstadadvocaten.nl,1,VALID DOMAIN,Has working MX/A record
+blum.com,3,VALID DOMAIN,Has working MX/A record
+blutours.ro,2,VALID DOMAIN,Has working MX/A record
+bmoar.com,3,DISPOSABLE,On disposable-domain blocklist
+boatsurveying.com.au,1,VALID DOMAIN,Has working MX/A record
+bongcareer.com,2,VALID DOMAIN,Has working MX/A record
+brynsaron.com,4,VALID DOMAIN,Has working MX/A record
+bsigroup.com,1,VALID DOMAIN,Has working MX/A record
+bsn.com.my,1,VALID DOMAIN,Has working MX/A record
+bssbfurniture.com,1,VALID DOMAIN,Has working MX/A record
+bticino.com,5,VALID DOMAIN,Has working MX/A record
+btinternet.com,21,SAFE,Known legitimate provider
+btopenworld.com,1,SAFE,Known legitimate provider
+bureauveritas.com,8,VALID DOMAIN,Has working MX/A record
+caiway.nl,1,SAFE,Known legitimate provider
+callington.com,1,VALID DOMAIN,Has working MX/A record
+cam-ed.com,3,VALID DOMAIN,Has working MX/A record
+capgemini.com,1,VALID DOMAIN,Has working MX/A record
+cdmaust.com.au,1,VALID DOMAIN,Has working MX/A record
+cecedu.us,1,VALID DOMAIN,Has working MX/A record
+cempaka.edu.my,1,VALID DOMAIN,Has working MX/A record
+ch.sika.com,4,VALID DOMAIN,Has working MX/A record
+chandys.in,1,VALID DOMAIN,Has working MX/A record
+chronos.com.my,1,VALID DOMAIN,Has working MX/A record
+cicmedia.co.kr,1,VALID DOMAIN,Has working MX/A record
+cistechsolutions.com,1,VALID DOMAIN,Has working MX/A record
+climatefriendly.com,1,VALID DOMAIN,Has working MX/A record
+clowtmail.com,4,DISPOSABLE,On disposable-domain blocklist
+coherent.com,3,VALID DOMAIN,Has working MX/A record
+colced.us,1,VALID DOMAIN,Has working MX/A record
+colegioerikerikson.edu.mx,1,VALID DOMAIN,Has working MX/A record
+colibanestate.com,2,VALID DOMAIN,Has working MX/A record
+collybus.co,1,VALID DOMAIN,Has working MX/A record
+comcast.net,1,SAFE,Known legitimate provider
+consultant.com,2,SAFE,Known legitimate provider
+contratasmetalurgicas.com,1,VALID DOMAIN,Has working MX/A record
+coronade.net,1,VALID DOMAIN,Has working MX/A record
+creditcontrol.net.nz,1,VALID DOMAIN,Has working MX/A record
+crowns-hk.cpm,1,TYPO,Suspicious TLD '.cpm' (likely typo)
+cubetechgroup.com,1,VALID DOMAIN,Has working MX/A record
+customs.gov.my,1,VALID DOMAIN,Has working MX/A record
+cwyouth.org,1,VALID DOMAIN,Has working MX/A record
+daikin.co.jp,1,VALID DOMAIN,Has working MX/A record
+daniel1132.com,1,VALID DOMAIN,Has working MX/A record
+dashgadgets.co.uk,1,VALID DOMAIN,Has working MX/A record
+daum.net,9,SAFE,Known legitimate provider
+dcdrights.com,2,VALID DOMAIN,Has working MX/A record
+deepmails.org,2,DISPOSABLE,On disposable-domain blocklist
+deltajohnsons.com,3,DISPOSABLE,On disposable-domain blocklist
+denka-cs.com,1,VALID DOMAIN,Has working MX/A record
+depwd.gov.ph,1,NO MX,No mail records found
+desan-shipyard.com,4,VALID DOMAIN,Has working MX/A record
+destinygroup.com.my,1,VALID DOMAIN,Has working MX/A record
+devercy.co.uk,1,VALID DOMAIN,Has working MX/A record
+dharmoni.com,2,VALID DOMAIN,Has working MX/A record
+dhitconsulting.com.au,24,VALID DOMAIN,Has working MX/A record
+dhpic.co.kr,3,VALID DOMAIN,Has working MX/A record
+disefl.com,1,VALID DOMAIN,Has working MX/A record
+dlapiper.com,1,VALID DOMAIN,Has working MX/A record
+docomo.ne.jp,1,VALID DOMAIN,Has working MX/A record
+doctors.org.uk,1,SAFE,Known legitimate provider
+donumart.com,3,DISPOSABLE,On disposable-domain blocklist
+dosm.gov.my,1,VALID DOMAIN,Has working MX/A record
+dovercorp.com,1,VALID DOMAIN,Has working MX/A record
+doyle.uk.net,1,VALID DOMAIN,Has working MX/A record
+drb-hicom.com,19,VALID DOMAIN,Has working MX/A record
+dsimpex.no,1,VALID DOMAIN,Has working MX/A record
+dummyinbox.com,11,DISPOSABLE,On disposable-domain blocklist
+dummyinbox.xom,1,TYPO,Likely typo of dummyinbox.com
+dwseal.com,1,DISPOSABLE,On disposable-domain blocklist
+ecolab.com,2,VALID DOMAIN,Has working MX/A record
+email.com,7,TYPO,Likely typo of mail.com
+emax-international.com,3,VALID DOMAIN,Has working MX/A record
+embertec.com,1,VALID DOMAIN,Has working MX/A record
+epfedu.fr,1,VALID DOMAIN,Has working MX/A record
+esrimalaysia.com.my,1,VALID DOMAIN,Has working MX/A record
+essencebbqlab.com,1,VALID DOMAIN,Has working MX/A record
+exxonmobil.com,3,VALID DOMAIN,Has working MX/A record
+ezweb.ne.jp,2,VALID DOMAIN,Has working MX/A record
+falconinternational.biz,1,VALID DOMAIN,Has working MX/A record
+fastmail.fm,6,SAFE,Known legitimate provider
+fast-temp-mail.info,1,DISPOSABLE,On disposable-domain blocklist
+fisglobal.com,1,VALID DOMAIN,Has working MX/A record
+fkateru.com,2,VALID DOMAIN,Has working MX/A record
+flairpens.com,1,VALID DOMAIN,Has working MX/A record
+flamingotravels.co.in,1,VALID DOMAIN,Has working MX/A record
+flash.co,1,VALID DOMAIN,Has working MX/A record
+flwconnect.com.au,1,VALID DOMAIN,Has working MX/A record
+foaz.com,2,VALID DOMAIN,Has working MX/A record
+forestry.gov.my,1,VALID DOMAIN,Has working MX/A record
+fortinet.com,4,VALID DOMAIN,Has working MX/A record
+foxmail.com,2,SAFE,Known legitimate provider
+free.fr,7,SAFE,Known legitimate provider
+freenet.de,1,SAFE,Known legitimate provider
+frescofnb.com,1,VALID DOMAIN,Has working MX/A record
+frieslandcampina.com,2,VALID DOMAIN,Has working MX/A record
+g.mail.com,1,TYPO,Likely typo of gmail.com
+g.msuiit.edu.ph,1,VALID DOMAIN,Has working MX/A record
+galoc.com,1,VALID DOMAIN,Has working MX/A record
+gamemail.vip,2,DISPOSABLE,On disposable-domain blocklist
+gamil.com,7,TYPO,Likely typo of gmail.com
+gamudaland.com.my,1,VALID DOMAIN,Has working MX/A record
+garodiaeducation.com,1,VALID DOMAIN,Has working MX/A record
+gbiholdings.com,1,VALID DOMAIN,Has working MX/A record
+ghhsch.us,1,VALID DOMAIN,Has working MX/A record
+giatmara.edu.my,1,VALID DOMAIN,Has working MX/A record
+gilmours.net.au,1,VALID DOMAIN,Has working MX/A record
+globalnet.co.uk,1,SAFE,Known legitimate provider
+globetech-asia.com,1,VALID DOMAIN,Has working MX/A record
+gma.com,1,TYPO,Likely typo of gmx.com
+gmail.cim,1,TYPO,Likely typo of gmail.com
+gmail.cok,4,TYPO,Likely typo of gmail.com
+gmail.com,7315,SAFE,Known legitimate provider
+gmail.com.au,1,TYPO,Likely typo of gmail.com
+gmail.com.my,2,TYPO,Likely typo of gmail.com
+gmail.comd,1,TYPO,Likely typo of gmail.com
+gmail.con,13,TYPO,Likely typo of gmail.com
+gmail.my.com,1,TYPO,Likely typo of gmail.com
+gmailk.com,3,TYPO,Likely typo of gmail.com
+gmaill.com,1,TYPO,Likely typo of gmail.com
+gmaio.com,1,TYPO,Likely typo of gmail.com
+gmsil.com,1,TYPO,Likely typo of gmail.com
+gmx.co.uk,1,SAFE,Known legitimate provider
+gmx.com,1,SAFE,Known legitimate provider
+gmx.de,14,SAFE,Known legitimate provider
+googlemail.com,20,SAFE,Known legitimate provider
+hacknapp.com,10,DISPOSABLE,On disposable-domain blocklist
+hanmail.net,21,SAFE,Known legitimate provider
+health.wa.gov.au,1,VALID DOMAIN,Has working MX/A record
+hendrix-genetics.com,3,VALID DOMAIN,Has working MX/A record
+hilton.com,1,VALID DOMAIN,Has working MX/A record
+hitachi-kenki.com,1,VALID DOMAIN,Has working MX/A record
+hitachi-systems.com,1,VALID DOMAIN,Has working MX/A record
+hmail.com,6,TYPO,Likely typo of mail.com
+honeywell.com,1,VALID DOMAIN,Has working MX/A record
+hotmail.co.jk,1,TYPO,Likely typo of hotmail.co.jp
+hotmail.co.jp,1,SAFE,Known legitimate provider
+hotmail.co.nz,2,SAFE,Known legitimate provider
+hotmail.co.th,4,SAFE,Known legitimate provider
+hotmail.co.uk,99,SAFE,Known legitimate provider
+hotmail.com,967,SAFE,Known legitimate provider
+hotmail.com.au,1,SAFE,Known legitimate provider
+hotmail.com.tw,1,SAFE,Known legitimate provider
+hotmail.con,1,TYPO,Likely typo of hotmail.com
+hotmail.de,1,SAFE,Known legitimate provider
+hotmail.fr,13,SAFE,Known legitimate provider
+hotmail.it,1,SAFE,Known legitimate provider
+hotmail.my,6,SAFE,Known legitimate provider
+huawei.com,1,VALID DOMAIN,Has working MX/A record
+hussein.cc,3,VALID DOMAIN,Has working MX/A record
+hw.ac.uk,1,VALID DOMAIN,Has working MX/A record
+hyper.ocn.ne.jp,2,VALID DOMAIN,Has working MX/A record
+i8y.co,1,VALID DOMAIN,Has working MX/A record
+icloud.com,217,SAFE,Known legitimate provider
+icould.com,1,TYPO,Likely typo of icloud.com
+idemitsu.com.au,5,VALID DOMAIN,Has working MX/A record
+ifthen.co.uk,1,VALID DOMAIN,Has working MX/A record
+iinet.net.au,5,SAFE,Known legitimate provider
+iium.edu.my,2,VALID DOMAIN,Has working MX/A record
+ijm.com,1,VALID DOMAIN,Has working MX/A record
+imi.gov.my,2,VALID DOMAIN,Has working MX/A record
+infineon.com,2,VALID DOMAIN,Has working MX/A record
+infineon.con,2,TYPO,Likely typo of infineon.com
+intanbk.intan.my,6,VALID DOMAIN,Has working MX/A record
+internode.on.net,6,SAFE,Known legitimate provider
+ipgm.edu.my,2,VALID DOMAIN,Has working MX/A record
+islandbreeze.com.mv,1,VALID DOMAIN,Has working MX/A record
+iut-dhaka.edu,1,VALID DOMAIN,Has working MX/A record
+iutlook.com,1,TYPO,Likely typo of outlook.com
+jabil.com,4,TYPO,Likely typo of mail.com
+jayatiasa.net,2,VALID DOMAIN,Has working MX/A record
+jcu.edu.au,2,VALID DOMAIN,Has working MX/A record
+jeprograms.com,1,VALID DOMAIN,Has working MX/A record
+jetravel.com,2,VALID DOMAIN,Has working MX/A record
+jhanulogistics.com,1,VALID DOMAIN,Has working MX/A record
+jkr.gov.my,2,VALID DOMAIN,Has working MX/A record
+jpn.gov.my,1,VALID DOMAIN,Has working MX/A record
+jpp.gov.my,1,VALID DOMAIN,Has working MX/A record
+jrseal.com.my,1,VALID DOMAIN,Has working MX/A record
+jtcargo.id,1,VALID DOMAIN,Has working MX/A record
+kaishing-china.cn,2,VALID DOMAIN,Has working MX/A record
+kanini.co.in,2,VALID DOMAIN,Has working MX/A record
+kbs.gov.my,2,VALID DOMAIN,Has working MX/A record
+kesuma.com.my,2,VALID DOMAIN,Has working MX/A record
+kikodesign.com.au,1,VALID DOMAIN,Has working MX/A record
+kitchenvision.com.au,1,VALID DOMAIN,Has working MX/A record
+kliaekspres.com,3,VALID DOMAIN,Has working MX/A record
+konicaminolta.com,2,VALID DOMAIN,Has working MX/A record
+koses.co.kr,3,VALID DOMAIN,Has working MX/A record
+kpdn.gov.my,1,VALID DOMAIN,Has working MX/A record
+kpkt.gov.my,3,VALID DOMAIN,Has working MX/A record
+ktj.edu.my,1,VALID DOMAIN,Has working MX/A record
+ktmconsultingroup.com,1,VALID DOMAIN,Has working MX/A record
+kuh.kumamoto-u.ac.jp,1,VALID DOMAIN,Has working MX/A record
+kw.catv.ne.jp,1,VALID DOMAIN,Has working MX/A record
+lamrc.com,1,VALID DOMAIN,Has working MX/A record
+lamresearch.com,1,VALID DOMAIN,Has working MX/A record
+laposte.net,18,SAFE,Known legitimate provider
+leedall.com.au,2,VALID DOMAIN,Has working MX/A record
+leonardo.com,1,VALID DOMAIN,Has working MX/A record
+libero.it,1,SAFE,Known legitimate provider
+libertyinsurance.com.my,1,VALID DOMAIN,Has working MX/A record
+live.ca,3,SAFE,Known legitimate provider
+live.cn,3,SAFE,Known legitimate provider
+live.co.uk,9,SAFE,Known legitimate provider
+live.com,45,SAFE,Known legitimate provider
+live.com.au,6,SAFE,Known legitimate provider
+live.com.my,10,SAFE,Known legitimate provider
+live.com.pt,2,SAFE,Known legitimate provider
+live.com.sg,1,SAFE,Known legitimate provider
+live.fr,1,SAFE,Known legitimate provider
+livefortuna.com,1,VALID DOMAIN,Has working MX/A record
+localhost.fo,1,VALID DOMAIN,Has working MX/A record
+loreal.com,2,VALID DOMAIN,Has working MX/A record
+loyalhospitality.in,1,VALID DOMAIN,Has working MX/A record
+lsp-corp.com,2,VALID DOMAIN,Has working MX/A record
+ltfinadvice.com.au,1,VALID DOMAIN,Has working MX/A record
+lularum.com,1,VALID DOMAIN,Has working MX/A record
+lushandco.nz,7,VALID DOMAIN,Has working MX/A record
+mac.com,2,SAFE,Known legitimate provider
+mac.group,2,NO MX,No mail records found
+madurafasteners.com,1,VALID DOMAIN,Has working MX/A record
+maia.eonet.ne.jp,1,VALID DOMAIN,Has working MX/A record
+mail.apu.edu.my,3,VALID DOMAIN,Has working MX/A record
+mail.com,8,SAFE,Known legitimate provider
+mail.tomco.co.jp,1,VALID DOMAIN,Has working MX/A record
+makearchitects.com,1,VALID DOMAIN,Has working MX/A record
+makeittravel.com.au,1,VALID DOMAIN,Has working MX/A record
+malaysiaairlines.com,8,VALID DOMAIN,Has working MX/A record
+maple.com,2,TYPO,Likely typo of mail.com
+marchguidesassociation.org.uk,1,VALID DOMAIN,Has working MX/A record
+martgall.it,1,VALID DOMAIN,Has working MX/A record
+mascotsteel.com.au,1,VALID DOMAIN,Has working MX/A record
+mattburnett.co.uk,2,VALID DOMAIN,Has working MX/A record
+mattiasperesini.fr,1,VALID DOMAIN,Has working MX/A record
+maybakels.com.my,1,VALID DOMAIN,Has working MX/A record
+mckinsey.com,3,VALID DOMAIN,Has working MX/A record
+me.com,48,SAFE,Known legitimate provider
+mediaeast.uk,1,DISPOSABLE,On disposable-domain blocklist
+mediaholy.com,2,DISPOSABLE,On disposable-domain blocklist
+mesinlaundry.co.id,3,VALID DOMAIN,Has working MX/A record
+metinapharmconsulting.com,3,VALID DOMAIN,Has working MX/A record
+mfxis.com,1,VALID DOMAIN,Has working MX/A record
+mhr-defense.com,2,VALID DOMAIN,Has working MX/A record
+mida.gov.my,1,VALID DOMAIN,Has working MX/A record
+miit.gov.cn,3,VALID DOMAIN,Has working MX/A record
+mindtomind.com.my,1,VALID DOMAIN,Has working MX/A record
+mindtominf.com.my,1,NO MX,No mail records found
+miro.com,1,VALID DOMAIN,Has working MX/A record
+mmea.gov.my,1,VALID DOMAIN,Has working MX/A record
+mobilemediabd.com,1,VALID DOMAIN,Has working MX/A record
+modiinternational.com,3,VALID DOMAIN,Has working MX/A record
+moe.gov.my,1,VALID DOMAIN,Has working MX/A record
+moe-dl.edu.my,1,VALID DOMAIN,Has working MX/A record
+moh.gov.my,13,VALID DOMAIN,Has working MX/A record
+moha.gov.my,3,VALID DOMAIN,Has working MX/A record
+mohe.gov.my,4,VALID DOMAIN,Has working MX/A record
+mortech.co.nz,1,VALID DOMAIN,Has working MX/A record
+mosleyhome.co.uk,1,VALID DOMAIN,Has working MX/A record
+motorolasolutions.com,1,VALID DOMAIN,Has working MX/A record
+mountsideventures.com,1,VALID DOMAIN,Has working MX/A record
+mrwconsulting.com,1,VALID DOMAIN,Has working MX/A record
+ms23.hinet.net,1,VALID DOMAIN,Has working MX/A record
+msa.hinet.net,3,VALID DOMAIN,Has working MX/A record
+msc.group,1,VALID DOMAIN,Has working MX/A record
+msn.com,22,SAFE,Known legitimate provider
+mtkm.com.au,2,VALID DOMAIN,Has working MX/A record
+mugstock.com,1,DISPOSABLE,On disposable-domain blocklist
+my.com,1,SAFE,Known legitimate provider
+my.sika.com,2,VALID DOMAIN,Has working MX/A record
+mycwt.com,1,VALID DOMAIN,Has working MX/A record
+myneuramerge.com,1,VALID DOMAIN,Has working MX/A record
+mypethealh.com,3,DISPOSABLE,On disposable-domain blocklist
+myyahoo.com,1,SAFE,Known legitimate provider
+nate.com,2,SAFE,Known legitimate provider
+naver.com,128,SAFE,Known legitimate provider
+netzer.nz,1,VALID DOMAIN,Has working MX/A record
+nextgen-asia.com,2,VALID DOMAIN,Has working MX/A record
+nhs.net,1,VALID DOMAIN,Has working MX/A record
+nhs.scot,4,VALID DOMAIN,Has working MX/A record
+nibm.my,2,VALID DOMAIN,Has working MX/A record
+nifty.com,1,VALID DOMAIN,Has working MX/A record
+nifty.ne.jp,1,VALID DOMAIN,Has working MX/A record
+nipponkayaku.co.in,5,VALID DOMAIN,Has working MX/A record
+nissha.com,4,VALID DOMAIN,Has working MX/A record
+nitto.com,4,VALID DOMAIN,Has working MX/A record
+nltworld.com,1,VALID DOMAIN,Has working MX/A record
+nnfirm.com.my,1,VALID DOMAIN,Has working MX/A record
+nnz.nl,2,VALID DOMAIN,Has working MX/A record
+noblecorp.com,1,VALID DOMAIN,Has working MX/A record
+nordson.com,4,VALID DOMAIN,Has working MX/A record
+numbersnz.com,1,VALID DOMAIN,Has working MX/A record
+nxp.com,1,VALID DOMAIN,Has working MX/A record
+oneeastcapital.com.au,3,VALID DOMAIN,Has working MX/A record
+online.no,6,SAFE,Known legitimate provider
+optusnet.com.au,6,SAFE,Known legitimate provider
+orange.fr,6,SAFE,Known legitimate provider
+osib.com.au,1,VALID DOMAIN,Has working MX/A record
+oulook.com,2,TYPO,Likely typo of outlook.com
+oum.edu.my,1,VALID DOMAIN,Has working MX/A record
+outlok.in,1,TYPO,Likely typo of outlook.com
+outlook.cm,2,TYPO,Likely typo of outlook.com
+outlook.com,6873,SAFE,Known legitimate provider
+outlook.com.au,11,SAFE,Known legitimate provider
+outlook.con,5,TYPO,Likely typo of outlook.com
+outlook.de,1,SAFE,Known legitimate provider
+outlook.in,3,SAFE,Known legitimate provider
+outlook.jp,2,SAFE,Known legitimate provider
+outlook.my,4,SAFE,Known legitimate provider
+ozarkgroup.com.au,1,VALID DOMAIN,Has working MX/A record
+ozemail.com.au,3,SAFE,Known legitimate provider
+pamcapital.se,1,VALID DOMAIN,Has working MX/A record
+pathinayake.com.au,1,VALID DOMAIN,Has working MX/A record
+pdkmsb.com,2,VALID DOMAIN,Has working MX/A record
+pentamaster.com.my,1,VALID DOMAIN,Has working MX/A record
+perda.gov.my,1,VALID DOMAIN,Has working MX/A record
+pertok.com,3,DISPOSABLE,On disposable-domain blocklist
+petalmail.com,1,DISPOSABLE,On disposable-domain blocklist
+petronas.com,3,VALID DOMAIN,Has working MX/A record
+petronas.com.my,3,VALID DOMAIN,Has working MX/A record
+pfizer.com,4,VALID DOMAIN,Has working MX/A record
+phinia.com,2,VALID DOMAIN,Has working MX/A record
+plaggemarsmakelaars.nl,1,VALID DOMAIN,Has working MX/A record
+pmi.com,1,TYPO,Likely typo of my.com
+poisonword.com,11,DISPOSABLE,On disposable-domain blocklist
+polyu.edu.hk,1,VALID DOMAIN,Has working MX/A record
+powercept.com,1,VALID DOMAIN,Has working MX/A record
+preceptservices.com.au,5,VALID DOMAIN,Has working MX/A record
+prestoncarter.id.au,1,VALID DOMAIN,Has working MX/A record
+proton.me,7,SAFE,Known legitimate provider
+ptkmu.id,3,VALID DOMAIN,Has working MX/A record
+ptptn.gov.my,1,VALID DOMAIN,Has working MX/A record
+pvpharma.com,1,VALID DOMAIN,Has working MX/A record
+qianyi.ai,2,VALID DOMAIN,Has working MX/A record
+ql.com.my,1,VALID DOMAIN,Has working MX/A record
+qland.com.au,1,VALID DOMAIN,Has working MX/A record
+qorvo.com,1,VALID DOMAIN,Has working MX/A record
+qq.com,24,SAFE,Known legitimate provider
+qq.cpm,3,TYPO,Likely typo of qq.com
+raths.biz,1,VALID DOMAIN,Has working MX/A record
+ratlammotors.com,1,VALID DOMAIN,Has working MX/A record
+rdl.com.my,4,VALID DOMAIN,Has working MX/A record
+red151.co.uk,1,VALID DOMAIN,Has working MX/A record
+re-tada.com,1,VALID DOMAIN,Has working MX/A record
+rexcsb.com,3,VALID DOMAIN,Has working MX/A record
+richardborrett.com,3,VALID DOMAIN,Has working MX/A record
+riseup.net,3,SAFE,Known legitimate provider
+riyadtelecom.com,1,VALID DOMAIN,Has working MX/A record
+roche.com,1,VALID DOMAIN,Has working MX/A record
+rocketmail.com,8,SAFE,Known legitimate provider
+rommiui.com,6,VALID DOMAIN,Has working MX/A record
+roofracksgalore.com.au,1,VALID DOMAIN,Has working MX/A record
+rydeendocrinology.com.au,1,VALID DOMAIN,Has working MX/A record
+ryzid.com,55,DISPOSABLE,On disposable-domain blocklist
+sabah.gov.my,1,VALID DOMAIN,Has working MX/A record
+saifudinco.com,1,VALID DOMAIN,Has working MX/A record
+sandvik.com,5,VALID DOMAIN,Has working MX/A record
+sankyu-ap.com,1,VALID DOMAIN,Has working MX/A record
+sarawakenergy.com,1,VALID DOMAIN,Has working MX/A record
+sasburg.nl,2,VALID DOMAIN,Has working MX/A record
+sc.com,1,TYPO,Likely typo of msn.com
+schl.co.nz,3,VALID DOMAIN,Has working MX/A record
+seadrill.com,2,VALID DOMAIN,Has working MX/A record
+secpro-intl.com,1,VALID DOMAIN,Has working MX/A record
+sedd.com,2,VALID DOMAIN,Has working MX/A record
+seznam.cz,3,SAFE,Known legitimate provider
+shieldedpost.net,1,DISPOSABLE,On disposable-domain blocklist
+shmalaysia.com,1,VALID DOMAIN,Has working MX/A record
+sic-group.jp,1,VALID DOMAIN,Has working MX/A record
+silverdollar.co.nz,1,VALID DOMAIN,Has working MX/A record
+silverferntherapy.co.uk,1,VALID DOMAIN,Has working MX/A record
+silverspade.com.au,1,VALID DOMAIN,Has working MX/A record
+sistema.com.tr,1,VALID DOMAIN,Has working MX/A record
+siswa.ukm.edu.my,1,VALID DOMAIN,Has working MX/A record
+sitajames.com,1,VALID DOMAIN,Has working MX/A record
+sixopuls.com,4,NO MX,No mail records found
+sky.com,18,TYPO,Likely typo of my.com
+softbank.ne.jp,1,VALID DOMAIN,Has working MX/A record
+soppat.com,65,DISPOSABLE,On disposable-domain blocklist
+sopranodesign.com,1,VALID DOMAIN,Has working MX/A record
+sotc.in,1,VALID DOMAIN,Has working MX/A record
+soti.net,1,VALID DOMAIN,Has working MX/A record
+spectrum.net.nz,2,VALID DOMAIN,Has working MX/A record
+sprm.gov.my,1,VALID DOMAIN,Has working MX/A record
+ssm.com.my,1,VALID DOMAIN,Has working MX/A record
+startmail.com,1,SAFE,Known legitimate provider
+stihl.com.au,10,VALID DOMAIN,Has working MX/A record
+student.upm.edu.my,1,VALID DOMAIN,Has working MX/A record
+students.mq.edu.au,1,VALID DOMAIN,Has working MX/A record
+sugtbt.com,2,VALID DOMAIN,Has working MX/A record
+sunrise.ch,3,SAFE,Known legitimate provider
+synergie-cad.com,4,VALID DOMAIN,Has working MX/A record
+t.vodafone.ne.jp,1,VALID DOMAIN,Has working MX/A record
+tabsmaldives.com,1,VALID DOMAIN,Has working MX/A record
+takasago.com,1,VALID DOMAIN,Has working MX/A record
+talk21.com,4,SAFE,Known legitimate provider
+talktalk.net,2,SAFE,Known legitimate provider
+tarantodesign.com,1,VALID DOMAIN,Has working MX/A record
+tcs.com,1,VALID DOMAIN,Has working MX/A record
+teknos.com,6,VALID DOMAIN,Has working MX/A record
+teksamco.com,2,VALID DOMAIN,Has working MX/A record
+telfordcollege.ac.uk,1,VALID DOMAIN,Has working MX/A record
+telia.com,1,SAFE,Known legitimate provider
+temailz.com,4,DISPOSABLE,On disposable-domain blocklist
+tempmail.edu.pl,6,DISPOSABLE,On disposable-domain blocklist
+tennis.com.au,1,VALID DOMAIN,Has working MX/A record
+teraju.gov.my,1,VALID DOMAIN,Has working MX/A record
+theairstation.com.my,1,VALID DOMAIN,Has working MX/A record
+theaumos.com,3,VALID DOMAIN,Has working MX/A record
+theperrys.com.au,2,VALID DOMAIN,Has working MX/A record
+thesubmersibles.com,2,VALID DOMAIN,Has working MX/A record
+three60brands.com,1,VALID DOMAIN,Has working MX/A record
+tischler.au,1,VALID DOMAIN,Has working MX/A record
+tivogo.com,1,VALID DOMAIN,Has working MX/A record
+tm.com.my,5,VALID DOMAIN,Has working MX/A record
+tmail.cl,2,DISPOSABLE,On disposable-domain blocklist
+top-c.hk,2,VALID DOMAIN,Has working MX/A record
+tourism.gov.my,1,VALID DOMAIN,Has working MX/A record
+tpg.com.au,1,SAFE,Known legitimate provider
+trandy.co.uk,1,VALID DOMAIN,Has working MX/A record
+travel-den.com,1,VALID DOMAIN,Has working MX/A record
+trb.fr,2,VALID DOMAIN,Has working MX/A record
+treasury.gov.my,13,VALID DOMAIN,Has working MX/A record
+tregus.com,3,VALID DOMAIN,Has working MX/A record
+tsariley.au,3,VALID DOMAIN,Has working MX/A record
+turnbullhill.com.au,1,VALID DOMAIN,Has working MX/A record
+tutamail.com,4,SAFE,Known legitimate provider
+ubrcapital.com,2,VALID DOMAIN,Has working MX/A record
+ufc.best,2,VALID DOMAIN,Has working MX/A record
+ukm.edu.my,1,VALID DOMAIN,Has working MX/A record
+ukr.net,1,SAFE,Known legitimate provider
+umt.edu.my,2,VALID DOMAIN,Has working MX/A record
+unixpoholdings.com,1,VALID DOMAIN,Has working MX/A record
+unsw.edu.au,1,VALID DOMAIN,Has working MX/A record
+uol.com.br,1,SAFE,Known legitimate provider
+upcmail.nl,4,SAFE,Known legitimate provider
+upm.edu.my,1,VALID DOMAIN,Has working MX/A record
+usa.com,4,SAFE,Known legitimate provider
+usim.edu.my,1,VALID DOMAIN,Has working MX/A record
+utas.edu.au,1,VALID DOMAIN,Has working MX/A record
+utazzo.com,2,VALID DOMAIN,Has working MX/A record
+vaubourdolle.com,1,VALID DOMAIN,Has working MX/A record
+verizon.net,1,SAFE,Known legitimate provider
+vermeys.com.au,1,VALID DOMAIN,Has working MX/A record
+vernonbourne.uk,2,VALID DOMAIN,Has working MX/A record
+vertexinbox.com,1,DISPOSABLE,On disposable-domain blocklist
+vestigopetroleum.com,1,VALID DOMAIN,Has working MX/A record
+volvocars.com,1,VALID DOMAIN,Has working MX/A record
+wales5swheelchairrugbyunion.co.uk,2,VALID DOMAIN,Has working MX/A record
+wanadoo.fr,2,SAFE,Known legitimate provider
+wardhowell.com.ph,1,VALID DOMAIN,Has working MX/A record
+weatherford.com,2,VALID DOMAIN,Has working MX/A record
+web.de,9,SAFE,Known legitimate provider
+westnet.com.au,1,SAFE,Known legitimate provider
+wilcrow.com,1,VALID DOMAIN,Has working MX/A record
+worldjourneys.co.nz,1,VALID DOMAIN,Has working MX/A record
+x-box.in,1,VALID DOMAIN,Has working MX/A record
+xtra.co.nz,7,SAFE,Known legitimate provider
+xylem.com,1,VALID DOMAIN,Has working MX/A record
+yadim.com.my,5,VALID DOMAIN,Has working MX/A record
+yahoo.ca,2,SAFE,Known legitimate provider
+yahoo.co.id,4,SAFE,Known legitimate provider
+yahoo.co.in,19,SAFE,Known legitimate provider
+yahoo.co.jp,23,SAFE,Known legitimate provider
+yahoo.co.kr,1,SAFE,Known legitimate provider
+yahoo.co.nz,5,SAFE,Known legitimate provider
+yahoo.co.uk,36,SAFE,Known legitimate provider
+yahoo.com,691,SAFE,Known legitimate provider
+yahoo.com.au,44,SAFE,Known legitimate provider
+yahoo.com.hk,7,SAFE,Known legitimate provider
+yahoo.com.my,21,SAFE,Known legitimate provider
+yahoo.com.sg,12,SAFE,Known legitimate provider
+yahoo.com.tw,9,SAFE,Known legitimate provider
+yahoo.con,2,TYPO,Likely typo of yahoo.com
+yahoo.de,4,SAFE,Known legitimate provider
+yahoo.fr,12,SAFE,Known legitimate provider
+yahoo.in,1,SAFE,Known legitimate provider
+yahoo.it,2,SAFE,Known legitimate provider
+yahoo.se,2,SAFE,Known legitimate provider
+yamail.jp,3,VALID DOMAIN,Has working MX/A record
+yellowjeckets.in,6,NO MX,No mail records found
+y-k.co.kr,5,VALID DOMAIN,Has working MX/A record
+ymail.com,20,SAFE,Known legitimate provider
+youzimail.com,3,DISPOSABLE,On disposable-domain blocklist
+zhhjjt.com,4,VALID DOMAIN,Has working MX/A record
+ziggo.nl,7,SAFE,Known legitimate provider
+zizvy.com,1,VALID DOMAIN,Has working MX/A record
+znjs.com,1,VALID DOMAIN,Has working MX/A record
+znz.com.my,1,VALID DOMAIN,Has working MX/A record
+zohocorp.com,4,SAFE,Known legitimate provider
+zohomail.com,1,SAFE,Known legitimate provider
+zohomail.eu,14,SAFE,Known legitimate provider
