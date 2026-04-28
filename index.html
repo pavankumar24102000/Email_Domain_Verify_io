@@ -36,22 +36,18 @@
 
     html, body { background: var(--bg-0); color: var(--text-1); font-family: 'Inter', sans-serif; min-height: 100vh; }
 
-    /* Aurora background */
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background:
         radial-gradient(ellipse 80% 50% at 20% 0%, rgba(96, 165, 250, 0.15), transparent),
         radial-gradient(ellipse 60% 40% at 80% 20%, rgba(167, 139, 250, 0.12), transparent),
         radial-gradient(ellipse 70% 50% at 50% 100%, rgba(52, 211, 153, 0.08), transparent);
-      z-index: -1;
-      pointer-events: none;
+      z-index: -1; pointer-events: none;
     }
 
     .app { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-    /* Header */
     header {
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
@@ -60,8 +56,7 @@
     .logo {
       width: 42px; height: 42px;
       background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
-      border-radius: 11px;
-      display: grid; place-items: center;
+      border-radius: 11px; display: grid; place-items: center;
       font-size: 1.25rem; font-weight: 800;
       box-shadow: 0 4px 24px rgba(96, 165, 250, 0.4);
     }
@@ -72,22 +67,20 @@
     .live-indicator {
       display: inline-flex; align-items: center; gap: 0.45rem;
       padding: 0.35rem 0.7rem;
-      background: var(--green-bg);
-      color: var(--green);
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 500;
+      background: var(--green-bg); color: var(--green);
+      border-radius: 999px; font-size: 0.78rem; font-weight: 500;
     }
+    .live-indicator.processing { background: var(--yellow-bg); color: var(--yellow); }
+    .live-indicator.error      { background: var(--red-bg); color: var(--red); }
     .pulse {
-      width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+      width: 6px; height: 6px; border-radius: 50%; background: currentColor;
       animation: pulse 2s infinite;
     }
     @keyframes pulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6); }
-      50%      { opacity: 0.6; box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+      50%      { opacity: 0.6; box-shadow: 0 0 0 6px transparent; }
     }
 
-    /* Glass card base */
     .glass {
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
       backdrop-filter: blur(20px);
@@ -96,22 +89,16 @@
       box-shadow: var(--shadow-glow);
     }
 
-    /* Buttons */
     .btn {
       padding: 0.55rem 1.1rem;
-      background: var(--bg-3);
-      color: var(--text-1);
-      border: 1px solid var(--border-bright);
-      border-radius: 10px;
-      font-family: inherit;
-      font-size: 0.88rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      background: var(--bg-3); color: var(--text-1);
+      border: 1px solid var(--border-bright); border-radius: 10px;
+      font-family: inherit; font-size: 0.88rem; font-weight: 500;
+      cursor: pointer; transition: all 0.15s ease;
       text-decoration: none;
       display: inline-flex; align-items: center; gap: 0.45rem;
     }
-    .btn:hover { background: var(--bg-2); border-color: var(--border-bright); transform: translateY(-1px); }
+    .btn:hover { background: var(--bg-2); transform: translateY(-1px); }
     .btn.primary {
       background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
       border: none; color: white; font-weight: 600;
@@ -120,55 +107,37 @@
     .btn.primary:hover { box-shadow: 0 6px 24px rgba(96, 165, 250, 0.45); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    /* Inputs */
     .input, select {
       padding: 0.6rem 0.9rem;
       background: rgba(0, 0, 0, 0.25);
       color: var(--text-1);
       border: 1px solid var(--border);
       border-radius: 10px;
-      font-family: inherit;
-      font-size: 0.9rem;
+      font-family: inherit; font-size: 0.9rem;
       transition: border-color 0.15s ease;
     }
     .input:focus, select:focus { outline: none; border-color: var(--blue); }
     .input::placeholder { color: var(--text-3); }
 
-    /* Layout */
     .grid { display: grid; gap: 1.25rem; }
     .grid-cards { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 1.25rem; }
     .grid-main  { grid-template-columns: 2fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
     @media (max-width: 900px) { .grid-main { grid-template-columns: 1fr; } }
 
-    /* Stat cards */
     .stat {
-      padding: 1.4rem;
-      position: relative;
-      overflow: hidden;
+      padding: 1.4rem; position: relative; overflow: hidden;
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
     .stat:hover { transform: translateY(-2px); border-color: var(--border-bright); }
-    .stat::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: var(--accent-bg);
-      opacity: 0; transition: opacity 0.2s ease;
-    }
-    .stat:hover::before { opacity: 0.5; }
-    .stat-content { position: relative; z-index: 1; }
     .stat-icon {
-      width: 36px; height: 36px;
-      border-radius: 10px;
+      width: 36px; height: 36px; border-radius: 10px;
       display: grid; place-items: center;
       margin-bottom: 0.85rem;
-      background: var(--accent-bg);
-      color: var(--accent);
+      background: var(--accent-bg); color: var(--accent);
     }
     .stat-label { font-size: 0.78rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
     .stat-value {
-      font-size: 2.4rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
+      font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em;
       margin: 0.3rem 0 0.15rem;
       font-family: 'JetBrains Mono', monospace;
       color: var(--accent);
@@ -181,7 +150,6 @@
     .stat.unknown { --accent: var(--yellow); --accent-bg: var(--yellow-bg); }
     .stat.total   { --accent: var(--purple); --accent-bg: rgba(167, 139, 250, 0.12); }
 
-    /* Section title */
     .section-title {
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 0.9rem; padding: 0 0.25rem;
@@ -189,11 +157,9 @@
     .section-title h2 { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
     .section-title .meta { font-size: 0.82rem; color: var(--text-3); }
 
-    /* Chart */
     .chart-card { padding: 1.4rem; }
     .chart-wrap { position: relative; height: 280px; }
 
-    /* Sidebar/Top problems */
     .top-problems { padding: 1.4rem; }
     .problem-row {
       display: flex; align-items: center; gap: 0.75rem;
@@ -206,52 +172,96 @@
     .problem-domain .reason { font-size: 0.75rem; color: var(--text-3); margin-top: 1px; }
     .problem-count {
       font-family: 'JetBrains Mono', monospace;
-      font-weight: 600; font-size: 0.95rem;
-      color: var(--red);
+      font-weight: 600; font-size: 0.95rem; color: var(--red);
     }
 
-    /* Action bar / panels */
     .panel { padding: 1.4rem; margin-bottom: 1.25rem; }
     .panel h2 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; letter-spacing: -0.01em; }
 
     .row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
     .row .input { flex: 1; min-width: 200px; }
 
-    /* Download chips */
     .dl-grid { display: flex; gap: 0.6rem; flex-wrap: wrap; }
     .dl {
-      padding: 0.65rem 1.1rem;
-      border-radius: 12px;
-      text-decoration: none;
-      font-size: 0.88rem; font-weight: 500;
+      padding: 0.65rem 1.1rem; border-radius: 12px;
+      text-decoration: none; font-size: 0.88rem; font-weight: 500;
       display: inline-flex; align-items: center; gap: 0.55rem;
       border: 1px solid var(--border);
       transition: all 0.15s ease;
     }
     .dl:hover { transform: translateY(-1px); border-color: var(--border-bright); }
-    .dl.xlsx { background: var(--green-bg);  color: var(--green); }
-    .dl.csv  { background: var(--blue-bg);   color: var(--blue); }
-    .dl.pdf  { background: var(--red-bg);    color: var(--red); }
+    .dl.xlsx { background: var(--green-bg); color: var(--green); }
+    .dl.csv  { background: var(--blue-bg);  color: var(--blue); }
+    .dl.pdf  { background: var(--red-bg);   color: var(--red); }
     .dl-icon { width: 16px; height: 16px; }
 
-    /* Messages */
     .msg { margin-top: 0.85rem; padding: 0.7rem 0.95rem; border-radius: 10px; font-size: 0.88rem; border: 1px solid transparent; }
     .msg.ok    { background: var(--green-bg);  color: var(--green);  border-color: rgba(52, 211, 153, 0.25); }
     .msg.err   { background: var(--red-bg);    color: var(--red);    border-color: rgba(248, 113, 113, 0.25); }
     .msg.info  { background: var(--blue-bg);   color: var(--blue);   border-color: rgba(96, 165, 250, 0.25); }
 
-    /* Table */
-    .table-wrap { overflow-x: auto; }
+    /* Processing banner */
+    .processing-banner {
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.25rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--yellow-bg), rgba(251, 191, 36, 0.04));
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .spinner {
+      width: 22px; height: 22px;
+      border: 2.5px solid rgba(251, 191, 36, 0.25);
+      border-top-color: var(--yellow);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .processing-text { flex: 1; min-width: 200px; }
+    .processing-text .title { font-weight: 600; color: var(--yellow); margin-bottom: 2px; }
+    .processing-text .sub { font-size: 0.82rem; color: var(--text-2); }
+    .processing-banner.complete {
+      background: linear-gradient(135deg, var(--green-bg), rgba(52, 211, 153, 0.04));
+      border-color: rgba(52, 211, 153, 0.25);
+    }
+    .processing-banner.complete .spinner { display: none; }
+    .processing-banner.failed {
+      background: linear-gradient(135deg, var(--red-bg), rgba(248, 113, 113, 0.04));
+      border-color: rgba(248, 113, 113, 0.25);
+    }
+    .processing-banner.failed .spinner { display: none; }
+
+    /* Scrollable table */
+    .table-scroll {
+      max-height: 560px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.15);
+    }
+    .table-scroll::-webkit-scrollbar { width: 10px; }
+    .table-scroll::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 0 10px 10px 0; }
+    .table-scroll::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 8px; border: 2px solid var(--bg-1); }
+    .table-scroll::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 0.72rem 1rem; text-align: left; font-size: 0.88rem; border-bottom: 1px solid var(--border); }
-    th { background: rgba(255, 255, 255, 0.02); font-weight: 600; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2); }
+    thead th {
+      background: var(--bg-2);
+      font-weight: 600; font-size: 0.74rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--text-2);
+      position: sticky; top: 0; z-index: 1;
+      border-bottom: 1px solid var(--border-bright);
+    }
     tbody tr { transition: background 0.1s ease; }
     tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    tbody tr:last-child td { border-bottom: none; }
     td.num { text-align: right; font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
     td.domain { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
     .reason { color: var(--text-2); font-size: 0.82rem; }
 
-    /* Status badges */
     .badge {
       display: inline-flex; align-items: center; gap: 0.35rem;
       padding: 0.2rem 0.65rem; border-radius: 999px;
@@ -264,13 +274,12 @@
     .badge.red    { background: var(--red-bg);    color: var(--red); }
     .badge.yellow { background: var(--yellow-bg); color: var(--yellow); }
 
-    /* Tabs */
     .tabs {
-      display: flex; gap: 0.25rem;
+      display: flex; gap: 0.25rem; flex-wrap: wrap;
       background: rgba(0, 0, 0, 0.2);
       border: 1px solid var(--border);
       padding: 0.25rem; border-radius: 11px;
-      width: fit-content;
+      width: fit-content; max-width: 100%;
       margin-bottom: 1rem;
     }
     .tab {
@@ -278,28 +287,37 @@
       border: none; background: transparent; cursor: pointer;
       color: var(--text-2);
       font-family: inherit; font-size: 0.85rem; font-weight: 500;
-      border-radius: 8px;
-      transition: all 0.15s ease;
+      border-radius: 8px; transition: all 0.15s ease;
     }
     .tab:hover { color: var(--text-1); }
     .tab.active { background: var(--bg-3); color: var(--text-1); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 
-    /* PDF iframe */
     .pdf-frame { width: 100%; height: 800px; border: none; border-radius: 12px; background: var(--bg-1); }
 
-    /* Loading */
-    .skeleton {
-      background: linear-gradient(90deg, var(--bg-2) 0%, var(--bg-3) 50%, var(--bg-2) 100%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite; border-radius: 8px;
-    }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
     .empty { padding: 3rem; text-align: center; color: var(--text-3); }
+    .empty-stale {
+      padding: 2rem; text-align: center;
+      color: var(--yellow); font-size: 0.9rem;
+    }
     details summary { cursor: pointer; color: var(--text-2); font-size: 0.85rem; padding: 0.3rem 0; }
     details summary:hover { color: var(--text-1); }
     details p { color: var(--text-3); font-size: 0.85rem; padding: 0.5rem 0; line-height: 1.6; }
     code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.05); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
+
+    .stale-overlay {
+      position: relative;
+    }
+    .stale-overlay::after {
+      content: 'New file uploaded — old data hidden';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(15, 20, 36, 0.85);
+      backdrop-filter: blur(4px);
+      border-radius: 16px;
+      color: var(--text-2);
+      font-size: 0.9rem; font-weight: 500;
+      z-index: 10;
+    }
   </style>
 </head>
 <body>
@@ -315,68 +333,70 @@
       </div>
     </div>
     <div class="header-actions">
-      <span class="live-indicator"><span class="pulse"></span> Live data</span>
-      <button class="btn" onclick="loadResults()">↻ Refresh</button>
+      <span class="live-indicator" id="live-indicator"><span class="pulse"></span> <span id="live-text">Live data</span></span>
+      <button class="btn" onclick="loadResults(true)">↻ Refresh</button>
     </div>
   </header>
 
+  <!-- ============ PROCESSING BANNER (shown when workflow is running) ============ -->
+  <div id="processing-banner" style="display:none;"></div>
+
+  <!-- ============ UPLOAD (moved up - per request #3) ============ -->
+  <div class="glass panel">
+    <h2>Upload new Domain.xlsx</h2>
+    <div class="row">
+      <input type="file" class="input" id="fileInput" accept=".xlsx" />
+      <button class="btn primary" id="uploadBtn" onclick="uploadFile()">⤴ Upload &amp; trigger</button>
+    </div>
+    <div id="uploadMsg"></div>
+  </div>
+
   <!-- ============ STAT CARDS ============ -->
-  <div class="grid grid-cards">
+  <div class="grid grid-cards" id="cards-grid">
     <div class="stat glass safe">
-      <div class="stat-content">
-        <div class="stat-icon">✓</div>
-        <div class="stat-label">Safe Providers</div>
-        <div class="stat-value" id="count-safe">—</div>
-        <div class="stat-sub" id="rec-safe">&nbsp;</div>
-      </div>
+      <div class="stat-icon">✓</div>
+      <div class="stat-label">Safe Providers</div>
+      <div class="stat-value" id="count-safe">—</div>
+      <div class="stat-sub" id="rec-safe">&nbsp;</div>
     </div>
     <div class="stat glass valid">
-      <div class="stat-content">
-        <div class="stat-icon">⊡</div>
-        <div class="stat-label">Valid Domains</div>
-        <div class="stat-value" id="count-valid">—</div>
-        <div class="stat-sub" id="rec-valid">&nbsp;</div>
-      </div>
+      <div class="stat-icon">⊡</div>
+      <div class="stat-label">Valid Domains</div>
+      <div class="stat-value" id="count-valid">—</div>
+      <div class="stat-sub" id="rec-valid">&nbsp;</div>
     </div>
     <div class="stat glass bad">
-      <div class="stat-content">
-        <div class="stat-icon">⚠</div>
-        <div class="stat-label">Bad / Suspicious</div>
-        <div class="stat-value" id="count-bad">—</div>
-        <div class="stat-sub" id="rec-bad">&nbsp;</div>
-      </div>
+      <div class="stat-icon">⚠</div>
+      <div class="stat-label">Bad / Suspicious</div>
+      <div class="stat-value" id="count-bad">—</div>
+      <div class="stat-sub" id="rec-bad">&nbsp;</div>
     </div>
     <div class="stat glass unknown">
-      <div class="stat-content">
-        <div class="stat-icon">?</div>
-        <div class="stat-label">Unknown</div>
-        <div class="stat-value" id="count-unknown">—</div>
-        <div class="stat-sub" id="rec-unknown">&nbsp;</div>
-      </div>
+      <div class="stat-icon">?</div>
+      <div class="stat-label">Unknown</div>
+      <div class="stat-value" id="count-unknown">—</div>
+      <div class="stat-sub" id="rec-unknown">&nbsp;</div>
     </div>
     <div class="stat glass total">
-      <div class="stat-content">
-        <div class="stat-icon">∑</div>
-        <div class="stat-label">Total Records</div>
-        <div class="stat-value" id="count-total">—</div>
-        <div class="stat-sub" id="rec-total">&nbsp;</div>
-      </div>
+      <div class="stat-icon">∑</div>
+      <div class="stat-label">Total Records</div>
+      <div class="stat-value" id="count-total">—</div>
+      <div class="stat-sub" id="rec-total">&nbsp;</div>
     </div>
   </div>
 
   <!-- ============ CHART + TOP PROBLEMS ============ -->
   <div class="grid grid-main">
-    <div class="glass chart-card">
+    <div class="glass chart-card" id="chart-section">
       <div class="section-title">
         <h2>Distribution by category</h2>
-        <span class="meta" id="chart-meta">Records weighted</span>
+        <span class="meta">Records weighted</span>
       </div>
       <div class="chart-wrap">
         <canvas id="distChart"></canvas>
       </div>
     </div>
-
-    <div class="glass top-problems">
+    <div class="glass top-problems" id="problems-section">
       <div class="section-title">
         <h2>Top problem domains</h2>
         <span class="meta">By records affected</span>
@@ -406,7 +426,7 @@
     </div>
   </div>
 
-  <!-- ============ TABLE WITH TABS ============ -->
+  <!-- ============ TABLE WITH TABS + SCROLL ============ -->
   <div class="glass panel">
     <div class="section-title">
       <h2>Domain breakdown</h2>
@@ -427,19 +447,9 @@
       <input type="text" class="input" id="search" placeholder="Filter by domain or reason..." />
     </div>
 
-    <div class="table-wrap" id="table-wrapper">
+    <div class="table-scroll" id="table-wrapper">
       <div class="empty">Loading…</div>
     </div>
-  </div>
-
-  <!-- ============ UPLOAD ============ -->
-  <div class="glass panel">
-    <h2>Upload new Domain.xlsx</h2>
-    <div class="row">
-      <input type="file" class="input" id="fileInput" accept=".xlsx" />
-      <button class="btn primary" id="uploadBtn" onclick="uploadFile()">⤴ Upload &amp; trigger</button>
-    </div>
-    <div id="uploadMsg"></div>
   </div>
 
   <!-- ============ CONFIG ============ -->
@@ -448,7 +458,7 @@
     <div class="row">
       <input type="text" class="input" id="repoOwner" placeholder="GitHub username" />
       <input type="text" class="input" id="repoName"  placeholder="Repo name" />
-      <input type="text" class="input" id="repoBranch" placeholder="Branch (default: main)" value="main" style="max-width: 160px;" />
+      <input type="text" class="input" id="repoBranch" placeholder="Branch" value="main" style="max-width: 160px;" />
     </div>
     <div class="row" style="margin-top: 0.7rem;">
       <input type="password" class="input" id="ghToken" placeholder="GitHub Personal Access Token (browser-only)" />
@@ -457,7 +467,7 @@
     </div>
     <details style="margin-top: 0.85rem;">
       <summary>How to get a token</summary>
-      <p>GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token. Repository permissions → <code>Contents: Read and write</code>. Stored only in this browser.</p>
+      <p>GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens. Permissions: <code>Contents: Read and write</code> + <code>Actions: Read</code> (so the dashboard can check workflow status). Stored only in this browser.</p>
     </details>
     <div id="configMsg"></div>
   </div>
@@ -471,8 +481,9 @@
 </div>
 
 <script>
-  // ---------- helpers ----------
+  // ===== helpers =====
   const fmt = n => Number(n || 0).toLocaleString();
+  const STORAGE_KEY = "ev_state_v2";
 
   function classify(status) {
     const s = String(status || "").toUpperCase();
@@ -486,7 +497,6 @@
     document.getElementById(id).innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
   }
 
-  // animated counter
   function animateNumber(el, from, to, duration = 800) {
     const start = performance.now();
     function tick(now) {
@@ -499,7 +509,19 @@
     requestAnimationFrame(tick);
   }
 
-  // ---------- config ----------
+  // Persistent state across reloads
+  function getState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); }
+    catch { return {}; }
+  }
+  function setState(s) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+  }
+  function patchState(patch) {
+    setState({ ...getState(), ...patch });
+  }
+
+  // ===== config persistence =====
   function saveConfig() {
     const cfg = {
       owner:  document.getElementById("repoOwner").value.trim(),
@@ -534,7 +556,7 @@
     };
   }
 
-  // ---------- upload ----------
+  // ===== upload =====
   async function uploadFile() {
     const cfg = getConfig();
     if (!cfg.owner || !cfg.name || !cfg.token) {
@@ -545,7 +567,7 @@
     const file = fileEl.files[0];
     const btn = document.getElementById("uploadBtn");
     btn.disabled = true;
-    showMsg("uploadMsg", "Reading file...", "info");
+    showMsg("uploadMsg", "Uploading...", "info");
 
     try {
       const buf = await file.arrayBuffer();
@@ -582,10 +604,28 @@
         throw new Error(putRes.status + " " + (err.message || ""));
       }
 
-      const actionsUrl = "https://github.com/" + cfg.owner + "/" + cfg.name + "/actions";
-      showMsg("uploadMsg",
-        'Uploaded successfully. <a href="' + actionsUrl + '" target="_blank" style="color:inherit;text-decoration:underline;">Watch progress →</a>',
-        "ok");
+      const respJson = await putRes.json();
+      const newSha = respJson.commit ? respJson.commit.sha : null;
+
+      // PER REQUEST #1: clear old data immediately so nothing stale shows
+      clearDashboard();
+
+      // Save processing state so reload still knows
+      patchState({
+        processing: true,
+        uploadedAt: Date.now(),
+        commitSha: newSha,
+        owner: cfg.owner,
+        name: cfg.name,
+        branch: cfg.branch,
+        fileName: file.name
+      });
+
+      showMsg("uploadMsg", "Uploaded. Workflow starting…", "ok");
+
+      // Begin polling for workflow completion
+      startProcessingPoll();
+
     } catch (err) {
       showMsg("uploadMsg", "Upload failed: " + err.message, "err");
     } finally {
@@ -593,14 +633,164 @@
     }
   }
 
-  // ---------- data + render ----------
+  // ===== Clear dashboard for fresh upload =====
+  function clearDashboard() {
+    ["count-safe","count-valid","count-bad","count-unknown","count-total"].forEach(id => {
+      document.getElementById(id).textContent = "—";
+    });
+    ["rec-safe","rec-valid","rec-bad","rec-unknown","rec-total"].forEach(id => {
+      document.getElementById(id).textContent = "\u00A0";
+    });
+    document.getElementById("table-wrapper").innerHTML = '<div class="empty-stale">⏳ New file uploaded — waiting for workflow to finish processing.</div>';
+    document.getElementById("top-problems-list").innerHTML = '<div class="empty-stale">Processing…</div>';
+    document.getElementById("table-count").textContent = "—";
+    if (chart) { chart.destroy(); chart = null; }
+
+    // Add stale overlay over chart + problems sections
+    document.getElementById("chart-section").classList.add("stale-overlay");
+    document.getElementById("problems-section").classList.add("stale-overlay");
+  }
+
+  function unstale() {
+    document.getElementById("chart-section").classList.remove("stale-overlay");
+    document.getElementById("problems-section").classList.remove("stale-overlay");
+  }
+
+  // ===== Processing banner + poll =====
+  let pollTimer = null;
+  let pollSeconds = 0;
+
+  function showBanner(state, title, subtitle) {
+    const b = document.getElementById("processing-banner");
+    b.style.display = "flex";
+    b.className = "processing-banner " + state;
+    b.innerHTML = `
+      <div class="spinner"></div>
+      <div class="processing-text">
+        <div class="title">${title}</div>
+        <div class="sub">${subtitle}</div>
+      </div>
+    `;
+  }
+  function hideBanner() {
+    document.getElementById("processing-banner").style.display = "none";
+  }
+
+  function setLive(text, state) {
+    document.getElementById("live-text").textContent = text;
+    const el = document.getElementById("live-indicator");
+    el.classList.remove("processing", "error");
+    if (state) el.classList.add(state);
+  }
+
+  async function pollWorkflow() {
+    const st = getState();
+    if (!st.processing) { stopProcessingPoll(); return; }
+
+    const cfg = getConfig();
+    if (!cfg.owner || !cfg.name || !cfg.token) {
+      showBanner("", "Workflow running",
+        "Cannot check status — configure your token below to enable live polling. The workflow is still running on GitHub.");
+      return;
+    }
+
+    pollSeconds += 5;
+    const elapsed = Math.floor((Date.now() - st.uploadedAt) / 1000);
+    const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
+    const elapsedStr = (mins > 0 ? mins + "m " : "") + secs + "s";
+
+    try {
+      const url = "https://api.github.com/repos/" + cfg.owner + "/" + cfg.name + "/actions/runs?per_page=5&branch=" + encodeURIComponent(cfg.branch);
+      const res = await fetch(url, {
+        headers: {
+          "Authorization": "Bearer " + cfg.token,
+          "Accept": "application/vnd.github+json"
+        }
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+
+      // Find the run associated with our upload commit, or the most recent one after upload time
+      let run = null;
+      if (st.commitSha) {
+        run = (data.workflow_runs || []).find(r => r.head_sha === st.commitSha);
+      }
+      if (!run && data.workflow_runs && data.workflow_runs.length) {
+        const newest = data.workflow_runs[0];
+        if (new Date(newest.created_at).getTime() >= st.uploadedAt - 5000) {
+          run = newest;
+        }
+      }
+
+      if (!run) {
+        showBanner("", "Workflow queued",
+          "Waiting for GitHub to register the workflow run · " + elapsedStr + " elapsed");
+        setLive("Processing…", "processing");
+        return;
+      }
+
+      const status = run.status;       // queued | in_progress | completed
+      const conclusion = run.conclusion; // success | failure | cancelled (only when completed)
+
+      if (status === "completed") {
+        if (conclusion === "success") {
+          showBanner("complete", "✓ Processing complete",
+            "Loading fresh results…");
+          setLive("Live data");
+
+          // Wait a moment then load the actual results (the bot needs to commit results back)
+          setTimeout(() => {
+            patchState({ processing: false });
+            stopProcessingPoll();
+            unstale();
+            hideBanner();
+            loadResults(false);
+          }, 2500);
+        } else {
+          showBanner("failed", "✗ Workflow failed",
+            "Status: " + conclusion + ". Check the Actions tab on GitHub for details.");
+          setLive("Error", "error");
+          patchState({ processing: false });
+          stopProcessingPoll();
+        }
+      } else if (status === "in_progress") {
+        const stepInfo = run.name ? "Running: " + run.name : "Workflow building…";
+        showBanner("", stepInfo,
+          "Elapsed: " + elapsedStr + " · Auto-refreshing every 5s");
+        setLive("Processing…", "processing");
+      } else {
+        // queued or waiting
+        showBanner("", "Workflow queued",
+          "GitHub is preparing a runner · " + elapsedStr + " elapsed");
+        setLive("Processing…", "processing");
+      }
+    } catch (err) {
+      showBanner("", "Workflow running",
+        "Cannot check status (" + err.message + ") — workflow is still processing on GitHub. Elapsed: " + elapsedStr);
+    }
+  }
+
+  function startProcessingPoll() {
+    stopProcessingPoll();
+    pollSeconds = 0;
+    pollWorkflow(); // immediate
+    pollTimer = setInterval(pollWorkflow, 5000);
+  }
+  function stopProcessingPoll() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  // ===== render data =====
   let allRows = [];
   let chart = null;
   let activeStatus = "";
 
-  async function loadResults() {
+  async function loadResults(manual) {
+    // If a new file is being processed, don't overwrite the "processing" UI with old data
+    const st = getState();
+    if (st.processing && !manual) return;
+
     document.getElementById("table-wrapper").innerHTML = '<div class="empty">Loading…</div>';
-    document.getElementById("top-problems-list").innerHTML = '<div class="empty">Loading…</div>';
 
     try {
       const res = await fetch("Domain.xlsx?t=" + Date.now());
@@ -611,7 +801,7 @@
       const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, defval: "" });
 
       if (rows.length < 2) {
-        document.getElementById("table-wrapper").innerHTML = '<div class="empty">No results yet. Upload a file and run the workflow.</div>';
+        document.getElementById("table-wrapper").innerHTML = '<div class="empty">No results yet. Upload a file to begin.</div>';
         return;
       }
 
@@ -623,7 +813,6 @@
         : { domain: r[0], records: 1,                   status: String(r[1] || "—").toUpperCase(), reason: r[2] || "" }
       );
 
-      // Tally
       const tD = {green:0, blue:0, red:0, yellow:0};
       const tR = {green:0, blue:0, red:0, yellow:0};
       allRows.forEach(r => {
@@ -633,7 +822,6 @@
       });
       const totalR = tR.green + tR.blue + tR.red + tR.yellow;
 
-      // Animate counter values
       animateNumber(document.getElementById("count-safe"),    0, tD.green);
       animateNumber(document.getElementById("count-valid"),   0, tD.blue);
       animateNumber(document.getElementById("count-bad"),     0, tD.red);
@@ -650,8 +838,8 @@
       renderTopProblems();
       renderTable();
 
-      // bust PDF cache
       document.getElementById("pdf-frame").src = "Domain.pdf?t=" + Date.now();
+      unstale();
 
     } catch (err) {
       document.getElementById("table-wrapper").innerHTML = '<div class="empty">Could not load Domain.xlsx: ' + err.message + '</div>';
@@ -680,27 +868,15 @@
         }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '70%',
+        responsive: true, maintainAspectRatio: false, cutout: '70%',
         plugins: {
           legend: {
             position: 'right',
-            labels: {
-              color: styles.getPropertyValue('--text-1').trim(),
-              font: { family: 'Inter', size: 13 },
-              padding: 14,
-              usePointStyle: true,
-              pointStyle: 'circle'
-            }
+            labels: { color: styles.getPropertyValue('--text-1').trim(), font: { family: 'Inter', size: 13 }, padding: 14, usePointStyle: true, pointStyle: 'circle' }
           },
           tooltip: {
-            backgroundColor: '#0a0e1a',
-            borderColor: 'rgba(255,255,255,0.1)',
-            borderWidth: 1,
-            padding: 12,
-            titleFont: { family: 'Inter', size: 13 },
-            bodyFont: { family: 'Inter', size: 12 },
+            backgroundColor: '#0a0e1a', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, padding: 12,
+            titleFont: { family: 'Inter', size: 13 }, bodyFont: { family: 'Inter', size: 12 },
             callbacks: {
               label: ctx => {
                 const v = ctx.parsed;
@@ -722,12 +898,10 @@
       .filter(r => classify(r.status) === "red")
       .sort((a, b) => b.records - a.records)
       .slice(0, 8);
-
     if (!bad.length) {
       list.innerHTML = '<div class="empty">No problem domains 🎉</div>';
       return;
     }
-
     list.innerHTML = bad.map(r => `
       <div class="problem-row">
         <div class="problem-domain">
@@ -775,10 +949,9 @@
     wrapper.innerHTML = html;
   }
 
-  // ---------- init ----------
+  // ===== init =====
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("search").addEventListener("input", renderTable);
-
     document.querySelectorAll(".tab").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
@@ -789,7 +962,30 @@
     });
 
     loadConfig();
-    loadResults();
+
+    // PER REQUEST #4: check if a workflow is still processing from a prior tab/reload
+    const st = getState();
+    if (st.processing) {
+      // Resume showing processing state
+      clearDashboard();
+      const elapsed = Math.floor((Date.now() - st.uploadedAt) / 1000);
+      const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
+      showBanner("", "Workflow still processing",
+        "Resumed from previous session · " + (mins > 0 ? mins + "m " : "") + secs + "s elapsed · Checking status…");
+      setLive("Processing…", "processing");
+      startProcessingPoll();
+
+      // If it's been more than 15 minutes, auto-clear (workflow probably timed out / something is off)
+      if (elapsed > 900) {
+        patchState({ processing: false });
+        stopProcessingPoll();
+        hideBanner();
+        unstale();
+        loadResults(false);
+      }
+    } else {
+      loadResults(false);
+    }
   });
 </script>
 </body>
