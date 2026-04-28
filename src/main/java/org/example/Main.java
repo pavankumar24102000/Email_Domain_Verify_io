@@ -1,12 +1,23 @@
 package org.example;
 
-import com.lowagie.text.*;
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
 import com.lowagie.text.Font;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.naming.Context;
@@ -16,7 +27,11 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
 import java.awt.Color;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -24,8 +39,22 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class Main {
@@ -78,7 +107,6 @@ public class Main {
         "tutanota.com"
     ));
 
-    // Hand-curated typos. Removed hmail.com (real domain).
     private static final Map<String, String> KNOWN_TYPOS = new HashMap<>();
     static {
         KNOWN_TYPOS.put("gmail.cim",  "gmail.com");
@@ -111,10 +139,8 @@ public class Main {
         KNOWN_TYPOS.put("dummyinbox.xom", "dummyinbox.com");
     }
 
-    // Common gibberish TLDs that indicate a typo of .com / .net etc.
     private static final Set<String> GIBBERISH_TLDS = new HashSet<>(Arrays.asList(
-        "cpm", "ckm", "comd", "comm", "ocm", "xom", "vom", "con", "cim", "cok",
-        "cm" // .cm is a real TLD (Cameroon) but rarely intentional
+        "cpm", "ckm", "comd", "comm", "ocm", "xom", "vom", "con", "cim", "cok", "cm"
     ));
 
     private static final Pattern DOMAIN_RE =
@@ -138,7 +164,6 @@ public class Main {
         Sheet inputSheet = workbook.getSheetAt(0);
         DataFormatter formatter = new DataFormatter();
 
-        // Read all input domains
         List<String> domains = new ArrayList<>();
         for (int i = 1; i <= inputSheet.getLastRowNum(); i++) {
             Row row = inputSheet.getRow(i);
@@ -154,7 +179,6 @@ public class Main {
         }
         log("Domains to classify: " + domains.size());
 
-        // First pass — offline classification
         Map<String, String[]> results = new LinkedHashMap<>();
         Set<String> needsMx = new LinkedHashSet<>();
         for (String d : domains) {
@@ -163,8 +187,6 @@ public class Main {
             if (r[0].equals("UNKNOWN")) needsMx.add(d);
         }
 
-        // Edit-distance typo pass: any still-UNKNOWN domain within edit distance 2
-        // of a SAFE domain gets flagged as TYPO before MX is even checked.
         log("Running edit-distance typo detection...");
         for (String d : new ArrayList<>(needsMx)) {
             String suggestion = nearestSafeDomain(d);
@@ -174,7 +196,6 @@ public class Main {
             }
         }
 
-        // MX lookup pass for what remains UNKNOWN
         log("MX lookups for " + needsMx.size() + " domains...");
         Map<String, Boolean> mx = parallelMxLookups(needsMx);
 
@@ -186,7 +207,6 @@ public class Main {
             }
         }
 
-        // Final tallies
         int safe = 0, validDomain = 0, bad = 0, unknown = 0;
         for (String[] r : results.values()) {
             switch (r[0]) {
@@ -200,16 +220,10 @@ public class Main {
             }
         }
 
-        // Write Excel (overwrite Domain.xlsx with Results sheet)
         writeExcel(workbook, inputFile, results);
-
-        // Write CSV
         writeCsv(csvFile, results);
-
-        // Write PDF
         writePdf(pdfFile, results, safe, validDomain, bad, unknown);
 
-        // Logs: only summary, never per-domain
         log("");
         log("=========== SUMMARY ===========");
         log("SAFE          : " + safe);
@@ -234,7 +248,6 @@ public class Main {
         if (KNOWN_TYPOS.containsKey(domain)) {
             return new String[]{"TYPO", "Likely typo of " + KNOWN_TYPOS.get(domain)};
         }
-        // Gibberish TLD detection
         int lastDot = domain.lastIndexOf('.');
         if (lastDot != -1) {
             String tld = domain.substring(lastDot + 1);
@@ -256,12 +269,10 @@ public class Main {
         return new String[]{"UNKNOWN", "Pending checks"};
     }
 
-    /** Returns nearest SAFE domain within edit distance 2, or null. */
     private static String nearestSafeDomain(String domain) {
         String best = null;
         int bestDist = 3;
         for (String safe : KNOWN_LEGIT) {
-            // Skip if length difference is already > 2 (early prune)
             if (Math.abs(safe.length() - domain.length()) > 2) continue;
             int d = levenshtein(domain, safe);
             if (d > 0 && d < bestDist) {
@@ -414,7 +425,6 @@ public class Main {
         subtitle.setSpacingAfter(16);
         doc.add(subtitle);
 
-        // Summary table
         doc.add(new Paragraph("Summary", h2Font));
         PdfPTable summary = new PdfPTable(2);
         summary.setWidthPercentage(60);
@@ -422,15 +432,14 @@ public class Main {
         summary.setSpacingAfter(20);
         summary.setHorizontalAlignment(Element.ALIGN_LEFT);
 
-        addSummaryRow(summary, "SAFE (known providers)",        String.valueOf(safe),        new Color(220, 252, 231));
-        addSummaryRow(summary, "VALID DOMAIN (real companies)", String.valueOf(valid),       new Color(207, 250, 254));
-        addSummaryRow(summary, "BAD (disposable/typo/no-MX)",   String.valueOf(bad),         new Color(254, 226, 226));
-        addSummaryRow(summary, "UNKNOWN (manual review)",       String.valueOf(unknown),     new Color(254, 249, 195));
+        addSummaryRow(summary, "SAFE (known providers)",        String.valueOf(safe),  new Color(220, 252, 231));
+        addSummaryRow(summary, "VALID DOMAIN (real companies)", String.valueOf(valid), new Color(207, 250, 254));
+        addSummaryRow(summary, "BAD (disposable/typo/no-MX)",   String.valueOf(bad),   new Color(254, 226, 226));
+        addSummaryRow(summary, "UNKNOWN (manual review)",       String.valueOf(unknown), new Color(254, 249, 195));
         addSummaryRow(summary, "TOTAL",                         String.valueOf(safe + valid + bad + unknown),
                 new Color(241, 245, 249));
         doc.add(summary);
 
-        // Full table
         doc.add(new Paragraph("Full Results", h2Font));
         PdfPTable table = new PdfPTable(new float[]{4, 2, 5});
         table.setWidthPercentage(100);
