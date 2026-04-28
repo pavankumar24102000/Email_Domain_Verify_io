@@ -402,6 +402,14 @@ public class Main {
         s.setColumnWidth(1, 4500);
         s.setColumnWidth(2, 16000);
 
+        // Make Results the active/default sheet so it opens first
+        int resultsIdx = wb.getSheetIndex("Results");
+        if (resultsIdx != -1) {
+            wb.setActiveSheet(resultsIdx);
+            wb.setSelectedTab(resultsIdx);
+            wb.setFirstVisibleTab(resultsIdx);
+        }
+
         try (FileOutputStream fos = new FileOutputStream(path)) {
             wb.write(fos);
         }
